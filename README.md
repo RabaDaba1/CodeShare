@@ -24,9 +24,9 @@ Then got to the `http://localhost:8000/`
 
 ### Directories
 Each of those folders contain:
-- `requirements` files that lists all the Python dependencies needed
+- `requirements` files that lists all the Python dependencies needed.
 - `src` main source directory of this project. It contains the core logic of your application.
-- `models` SQLAlchemy models
+- `models` SQLAlchemy models.
 - `routers` FastAPI routers.
 - `templates` all the HTML templates.
 
@@ -34,4 +34,4 @@ Each of those folders contain:
 - `.env` stores environment variables.
 - `.gitignore` file to ignore files and directories.
 - `README.md` project documentation.
-- `main.py` entry point of the application where is an instance of the FastAPI class and the routers
+- `main.py` entry point of the application where is an instance of the FastAPI class and the routers.
