@@ -6,12 +6,13 @@ A social media platform for software developers and sharing interesting code sni
 - **Uvicorn** serves the FastAPI application.
 - **Jinja2** renders HTML templates for the frontend.
 - **SQLAlchemy** connects with a database.
+- **Tailwind** CSS framework.
 
 ## Libraries
 
 ### Instalation
 ``` bash
-pip install fastapi uvicorn Jinja2 SQLAlchemy
+pip install fastapi uvicorn Jinja2 SQLAlchemy pytailwindcss
 ```
 
 ### Run the app
