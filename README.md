@@ -20,7 +20,7 @@ tailwindcss
 
 ### Run the app
 ``` bash
-cd src
+cd app
 uvicorn main:app --reload
 ```
 Then go to the `http://localhost:8000/`
