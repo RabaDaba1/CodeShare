@@ -1,4 +1,4 @@
-# Code Share
+# CodeShare
 A social media platform for software developers and sharing interesting code snippets.
 
 **Technology stack**:
