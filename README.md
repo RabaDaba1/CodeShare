@@ -14,6 +14,9 @@ A social media platform for software developers and sharing interesting code sni
 ``` bash
 pip install fastapi uvicorn Jinja2 SQLAlchemy pytailwindcss
 ```
+``` bash
+tailwindcss
+```
 
 ### Run the app
 ``` bash
