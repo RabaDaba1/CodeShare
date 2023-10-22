@@ -11,7 +11,7 @@ A social media platform for software developers and sharing interesting code sni
 
 ### Instalation
 ``` bash
-pip install fastapi uvicorn Jinja2
+pip install fastapi uvicorn Jinja2 SQLAlchemy
 ```
 
 ### Run the app
