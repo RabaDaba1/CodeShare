@@ -1,16 +1,18 @@
 # Code Share
 A social media platform for software developers and sharing interesting code snippets.
 
+**Technology stack**:
+- **FastAPI** is used to build the main application and define all the API .
+- **Uvicorn** serves the FastAPI application.
+- **Jinja2** renders HTML templates for the frontend.
+- **SQLAlchemy** connects with a database.
+
 ## Libraries
 
 ### Instalation
 ``` bash
 pip install fastapi uvicorn Jinja2
 ```
-
-- **FastAPI** is used to build the main application and define all the API .
-- **Uvicorn** serves the FastAPI application.
-- **Jinja2** renders HTML templates for the frontend.
 
 ### Run the app
 ``` bash
