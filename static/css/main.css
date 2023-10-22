@@ -699,10 +699,6 @@ video {
   overflow: hidden;
 }
 
-.overscroll-none {
-  overscroll-behavior: none;
-}
-
 .rounded-full {
   border-radius: 9999px;
 }
