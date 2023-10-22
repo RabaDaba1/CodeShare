@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 
 # Import the routes
 from routers import login, register
@@ -17,6 +18,6 @@ templates = Jinja2Templates(directory="../templates")
 app.mount("/static", StaticFiles(directory="../static"), name="static")
 
 # Route for the home page
-@app.get("/")
+@app.get("/", response_class=HTMLResponse, tags=["Register"])
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
