@@ -27,7 +27,7 @@ Then go to the `http://localhost:8000/`
 ### Directories
 Each of those folders contain:
 - `requirements` files that lists all the Python dependencies needed.
-- `src` main source directory of this project. It contains the core logic of your application.
+- `src` main source directory of this project. It contains the core logic of this application.
 - `models` SQLAlchemy models.
 - `routers` FastAPI routers.
 - `templates` all the HTML templates.
