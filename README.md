@@ -19,7 +19,7 @@ pip install fastapi uvicorn Jinja2 SQLAlchemy
 cd src
 uvicorn main:app --reload
 ```
-Then got to the `http://localhost:8000/`
+Then go to the `http://localhost:8000/`
 
 
 ## Project structure
