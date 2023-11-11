@@ -12,7 +12,7 @@
     <header class="absolute inset-x-0 top-0 z-50">
       <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
-          <a href="#" class="-m-1.5 p-1.5">
+          <a href="/" class="-m-1.5 p-1.5">
             <span class="sr-only">CodeShare</span>
             <img class="h-6 w-auto" src="/static/images/logo.png" alt="">
           </a>
@@ -23,39 +23,88 @@
       </nav>
     </header>
           
-    <div class="container mx-auto mt-24 px-4 ">
+    <div class="container max-w-md md:max-w-2xl mx-auto mt-24 px-4">
+      <!-- Create Post Button -->
+      <div class="flex items-center mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4">
+        <img class="h-10 w-10 rounded-full object-cover inline" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="Profile Picture">
+        <div class="font-semibold text-base ml-2">Tony Stark</div>
+        <button id="create-post-button" class="ml-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">New post</button>
+      </div>
+
+      <!-- Create Post Section -->
+      <div id="create-post-section" class="mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4" style="display: none;">
+        <form id="create-post-form">
+          <!-- Post Description -->
+          <div>
+            <label for="post-description" class="block text-sm font-medium text-gray-700">Post Description</label>
+            <textarea id="post-description" name="post-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+          </div>
+
+          <!-- Programming Language -->
+          <div class="mt-4">
+            <label for="programming-language" class="block text-sm font-medium text-gray-700">Programming Language</label>
+            <select id="programming-language" name="programming-language" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <option value="">Select a language</option>
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <!-- Add more options as needed -->
+            </select>
+          </div>
+
+          <!-- Code -->
+          <div class="mt-4">
+            <label for="code" class="block text-sm font-medium text-gray-700">Code</label>
+            <textarea id="code" name="code" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+          </div>
+
+          <!-- Output -->
+          <div class="mt-4">
+            <label for="output" class="block text-sm font-medium text-gray-700">Output</label>
+            <input type="checkbox" id="output-checkbox" name="output-checkbox" class="mt-1 block rounded-md border-gray-300 shadow-sm">
+            <textarea id="output" name="output" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" disabled></textarea>
+          </div>
+
+          <!-- Post Button -->
+          <div class="mt-4">
+            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              Post
+            </button>
+          </div>
+        </form>
+      </div>
+
       <!-- POST TEMPLATE -->
-      <!-- <div class="max-w-md mx-auto bg-white rounded-xl border border-neutral-300 md:max-w-2xl m-3">
-        <div class="flex items-center p-4">
-          <img class="h-10 w-10 rounded-full" src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg" alt="Profile Picture">
+      <!-- <div class="mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4">
+        <div class="flex items-center">
+          <img class="h-10 w-10 rounded-full object-cover" src="USERS PROFILE PICTURE" alt="Profile Picture">
           <div class="ml-4">
-            <div class="font-bold text-lg">Username</div>
+            <div class="font-bold text-lg">USERNAME</div>
             <div class="text-gray-600 text-sm">Posted 2 hours ago</div>
           </div>
         </div>
-
-        <div class="px-4">
-          <p class="text-gray-800">This is a simple social media post content. It can be anything you want.</p>
+        <div class="my-4">
+          <p class="text-gray-800">CODE DESCRIPTION</p>
           <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
-            <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">JavaScript</div>
-            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">int x = 2137;</pre>
-            <pre class="rounded mt-2 p-4 bg-neutral-800">Output: Hello, world!</pre>
+            <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">PROGRAMMING LANGUAGE</div>
+            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">CODE</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800">CODE OUTPUT</pre>
           </div>
         </div>
 
-        <div class="flex items-center justify-start space-x-4 p-4">
-          <button class="text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
+        <div class="flex items-center justify-start space-x-4">
+          <button class="like text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-comment"></i> Comment</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-share-square"></i> Share</button>
         </div>
       </div> -->
 
-
       <!-- Post -->
-      <div class="max-w-md mx-auto bg-white rounded-xl border border-neutral-300 md:max-w-2xl m-3">
+      <div class="mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4">
         <!-- Post Header -->
-        <div class="flex items-center p-4">
-          <img class="h-10 w-10 rounded-full" src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg" alt="Profile Picture">
+        <div class="flex items-center">
+          <img class="h-10 w-10 rounded-full object-cover" src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg" alt="Profile Picture">
           <div class="ml-4">
             <div class="font-bold text-lg">Elon Musk</div>
             <div class="text-gray-600 text-sm">Posted 2 hours ago</div>
@@ -63,65 +112,68 @@
         </div>
 
         <!-- Post Content -->
-        <div class="px-4">
-          <p class="text-gray-800">This is a simple social media post content. It can be anything you want.</p>
+        <div class="my-4">
+          <p class="text-gray-800">Here is a Falcon 9 codebase.</p>
           <!-- Code Section -->
           <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
             <!-- Programming Language Label -->
             <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">JavaScript</div>
             <!-- Code Content -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">int x = 2137;</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">for (let i = 10; i >= 0; i--) {
+  console.log(i > 0 ? i : 'Falcon 9 has launched!');
+}</pre>
             <!-- Output Section -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800">Output: Hello, world!</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800">10 8 9 6 5 4 3 2 1
+Falcon 9 has launched!</pre>
           </div>
         </div>
 
         <!-- Post Footer -->
-        <div class="flex items-center justify-start space-x-4 p-4">
-          <button class="text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
+        <div class="flex items-center justify-start space-x-4">
+          <button class="like text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-comment"></i> Comment</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-share-square"></i> Share</button>
         </div>
       </div>
 
       <!-- Post -->
-      <div class="max-w-md mx-auto bg-white rounded-xl border border-neutral-300 md:max-w-2xl m-3">
+      <div class="mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4">
         <!-- Post Header -->
-        <div class="flex items-center p-4">
-          <img class="h-10 w-10 rounded-full" src="https://fwcdn.pl/fcp/63/18/626318/21701.1.jpg" alt="Profile Picture">
+        <div class="flex items-center">
+          <img class="h-10 w-10 rounded-full object-cover" src="https://upload.wikimedia.org/wikipedia/commons/3/32/Star_Wars_-_Darth_Vader.jpg" alt="Profile Picture">
           <div class="ml-4">
-            <div class="font-bold text-lg">Batman</div>
+            <div class="font-bold text-lg">Darth Vader</div>
             <div class="text-gray-600 text-sm">Posted 3 hours ago</div>
           </div>
         </div>
     
         <!-- Post Content -->
-        <div class="px-4">
+        <div class="my-4">
           <p class="text-gray-800">Here's a simple C# code snippet.</p>
           <!-- Code Section -->
           <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
             <!-- Programming Language Label -->
             <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">C#</div>
             <!-- Code Content -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">Console.WriteLine("Hello, World!");</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">Console.WriteLine("No," + "I Am" + "Your Father.");</pre>
             <!-- Output Section -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800">Output: Hello, World!</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800">No, I Am Your Father.</pre>
           </div>
         </div>
     
         <!-- Post Footer -->
-        <div class="flex items-center justify-start space-x-4 p-4">
-          <button class="text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
+        <div class="flex items-center justify-start space-x-4">
+          <button class="like text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-comment"></i> Comment</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-share-square"></i> Share</button>
         </div>
       </div>
 
       <!-- Post -->
-      <div class="max-w-md mx-auto bg-white rounded-xl border border-neutral-300 md:max-w-2xl m-3">
+      <div class="mx-auto bg-white rounded-xl border border-neutral-300 m-3 p-4">
         <!-- Post Header -->
-        <div class="flex items-center p-4">
-          <img class="h-10 w-10 rounded-full" src="https://cdn.vox-cdn.com/thumbor/8nE3FF3ciOGn6XheuCukQISJzV0=/0x0:2262x1140/1200x800/filters:focal(951x390:1311x750)/cdn.vox-cdn.com/uploads/chorus_image/image/72152169/Screen_Shot_2023_04_05_at_3.56.43_PM.0.png" alt="Profile Picture">
+        <div class="flex items-center">
+          <img class="h-10 w-10 rounded-full object-cover" src="https://cdn.vox-cdn.com/thumbor/8nE3FF3ciOGn6XheuCukQISJzV0=/0x0:2262x1140/1200x800/filters:focal(951x390:1311x750)/cdn.vox-cdn.com/uploads/chorus_image/image/72152169/Screen_Shot_2023_04_05_at_3.56.43_PM.0.png" alt="Profile Picture">
           <div class="ml-4">
             <div class="font-bold text-lg">Mario</div>
             <div class="text-gray-600 text-sm">Posted 1 hour ago</div>
@@ -129,27 +181,28 @@
         </div>
 
         <!-- Post Content -->
-        <div class="px-4">
+        <div class="my-4">
           <p class="text-gray-800">Here's a simple Python code snippet.</p>
           <!-- Code Section -->
           <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
             <!-- Programming Language Label -->
             <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">Python</div>
             <!-- Code Content -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">print("It's a me, Mario!")</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">print('It's a me, Mario!')</pre>
             <!-- Output Section -->
-            <pre class="rounded mt-2 p-4 bg-neutral-800">Output: It's a me, Mario!</pre>
+            <pre class="rounded mt-2 p-4 bg-neutral-800">It's a me, Mario!</pre>
           </div>
         </div>
 
         <!-- Post Footer -->
-        <div class="flex items-center justify-start space-x-4 p-4">
-          <button class="text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
+        <div class="flex items-center justify-start space-x-4">
+          <button class="like text-gray-600 hover:text-blue-600"><i class="far fa-heart"></i> Like</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-comment"></i> Comment</button>
           <button class="text-gray-600 hover:text-blue-600"><i class="far fa-share-square"></i> Share</button>
         </div>
       </div>
 
     </div>
+    <script src="{{ url_for('static', path='/js/feed.js') }}"></script>
   </body>
 </html>
