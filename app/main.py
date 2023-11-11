@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
 # Import the routes
-from routers import login, register
+from routers import login, register, feed
 
 # Create an app object
 app = FastAPI()
@@ -12,6 +12,7 @@ app = FastAPI()
 # Include the routers
 app.include_router(login.router)
 app.include_router(register.router)
+app.include_router(feed.router)
 
 # Mount the templates and static folders
 templates = Jinja2Templates(directory="../templates")
