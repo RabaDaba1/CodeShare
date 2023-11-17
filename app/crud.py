@@ -19,6 +19,8 @@ def create_user(login: str, username: str, password: str, repeat_password: str) 
         HTTPException: If the password is too short or too long.
         HTTPException: If the username is too short or too long.
     """
+    
+    # TODO: Implement this function
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """
@@ -36,6 +38,8 @@ def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
         HTTPException: If the users are already friends.
         HTTPException: If the users are the same.
     """
+    
+    # TODO: Implement this function
 
 def like_post(user_id: int, post_id: int) -> PostLike:
     """
@@ -51,6 +55,8 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     Exceptions:
         HTTPException: If the post does not exist.
     """
+    
+    # TODO: Implement this function
 
 def create_post(author_id: int, description: str, date: datetime, lang: enum, code: str, output: str) -> Post:
     """
@@ -71,6 +77,8 @@ def create_post(author_id: int, description: str, date: datetime, lang: enum, co
         HTTPException: If the programming language is not supported.
         HTTPException: If the description, code, or output are too long.
     """
+    
+    # TODO: Implement this function
 
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
@@ -89,3 +97,5 @@ def create_comment(author_id: int, post_id: int, content: str, date: datetime) -
         HTTPException: If the post does not exist.
         HTTPException: If the content is too long.
     """
+    
+    # TODO: Implement this function
