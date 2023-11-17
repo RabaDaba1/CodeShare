@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 import datetime
 
-def create_user(login: str, username: str, password: str) -> User:
+def create_user(login: str, username: str, password: str, repeat_password: str) -> User:
     """
     Creates a new user.
     
@@ -12,6 +12,12 @@ def create_user(login: str, username: str, password: str) -> User:
         
     Returns:
         User: Created user object.
+        
+    Exceptions:
+        HTTPException: If the login is already taken.
+        HTTPException: If the passwords don't match.
+        HTTPException: If the password is too short or too long.
+        HTTPException: If the username is too short or too long.
     """
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
@@ -24,11 +30,16 @@ def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
         
     Returns:
         FriendRequest: Created friend request object.
+        
+    Exceptions:
+        HTTPException: If the request already exists.
+        HTTPException: If the users are already friends.
+        HTTPException: If the users are the same.
     """
 
 def like_post(user_id: int, post_id: int) -> PostLike:
     """
-    Adds a like to a post.
+    Adds a like to a post or removes it.
     
     Args:
         user_id (int): ID of the user who liked the post.
@@ -36,6 +47,9 @@ def like_post(user_id: int, post_id: int) -> PostLike:
         
     Returns:
         PostLike: Created post like object.
+        
+    Exceptions:
+        HTTPException: If the post does not exist.
     """
 
 def create_post(author_id: int, description: str, date: datetime, lang: enum, code: str, output: str) -> Post:
@@ -52,6 +66,10 @@ def create_post(author_id: int, description: str, date: datetime, lang: enum, co
         
     Returns:
         Post: Created post object.
+        
+    Exceptions:
+        HTTPException: If the programming language is not supported.
+        HTTPException: If the description, code, or output are too long.
     """
 
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
@@ -66,4 +84,8 @@ def create_comment(author_id: int, post_id: int, content: str, date: datetime) -
         
     Returns:
         Comment: Created comment object.
+        
+    Exceptions:
+        HTTPException: If the post does not exist.
+        HTTPException: If the content is too long.
     """
