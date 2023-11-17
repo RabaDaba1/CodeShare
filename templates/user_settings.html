@@ -12,16 +12,16 @@
 
         <div class="container mx-auto px-4 max-w-6xl mt-24">
             <h1 class="text-2xl font-bold mb-4">Settings</h1>
-            
-            <form action="/user/{{ username }}/settings" method="post">
+
+            <form action="/user/{{ login }}/settings" method="post">
                 <label for="login">Login:</label><br>
-                <input type="text" id="login" name="login" value="{{ login }}"><br>
+                <input type="text" id="login" name="login"><br>
                 <label for="username">Username:</label><br>
-                <input type="text" id="username" name="username" value="{{ username }}"><br>
+                <input type="text" id="username" name="username"><br>
                 <label for="bio">Bio:</label><br>
-                <textarea id="bio" name="bio">{{ bio }}</textarea><br>
+                <textarea id="bio" name="bio"></textarea><br>
                 <label for="pic">Profile Picture URL:</label><br>
-                <input type="text" id="pic" name="pic" value="{{ pic }}"><br>
+                <input type="text" id="pic" name="pic"><br>
                 <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password"><br>
                 <input type="submit" value="Submit">
