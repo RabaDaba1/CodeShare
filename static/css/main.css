@@ -1005,6 +1005,10 @@ select {
   width: 2.75rem;
 }
 
+.w-9 {
+  width: 2.25rem;
+}
+
 .max-w-2xl {
   max-width: 42rem;
 }
