@@ -6,7 +6,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
 
 @router.get("/user/{login}", response_class=HTMLResponse, tags=["User"])
-async def get_user(request: Request, login: str):
+async def user_page(request: Request, login: str):
     # TODO
     # 1) Get user data from the database
     # 2) Send the data to the template
