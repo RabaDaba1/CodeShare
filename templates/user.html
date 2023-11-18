@@ -2,6 +2,7 @@
 <html>
     <head>
         <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/user.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +18,10 @@
                     <div class="col-span-1 bg-white border border-neutral-400 rounded-lg p-4">
                         <img class="mx-auto rounded-full p-4" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="{{ login }}'s profile picture">
                         <h2 class="text-xl font-bold mt-4">{{ login }}</h2>
-                        <p class="mt-2 text-sm text-gray-500">2137 followers | 69 following</p>
+                        <p class="mt-2 text-sm text-gray-500">
+                            <a href="#" id="followersLink">2137 followers</a> | 
+                            <a href="#" id="followingLink">69 following</a>
+                        </p>
                         <p class="mt-2 text-sm">Hi, I'm Tony Stark, also known as Iron Man. "A genius, billionaire, playboy and philanthropist".</p>
                     </div>
                 </div>
@@ -59,5 +63,49 @@ Iron Man suit has launched!</pre>
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div id="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+            <div style="background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 500px; height: 300px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <!-- Tabs and Close button -->
+                <div class="flex justify-between items-center border-b-2 border-gray-200 pb-1 relative">
+                    <!-- Tabs -->
+                    <div class="flex justify-center space-x-4">
+                        <button id="followersTab" class="py-2 px-4 font-semibold rounded-lg text-neutral-500">Followers</button>
+                        <button id="followingTab" class="py-2 px-4 font-semibold rounded-lg text-indigo-500">Following</button>
+                    </div>
+                    <!-- Close button -->
+                    <button id="close" class="text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <!-- Followers Section -->
+                <div id="followersSection" class="hidden p-4">
+                    <!-- List of followers -->
+                    <!-- Each follower -->
+                    <div class="flex items-center justify-between space-x-4">
+                        <div class="flex items-center">
+                            <img src="https://sportshub.cbsistatic.com/i/2023/09/19/e766705c-f30d-4e58-8bf3-3505ec412982/captain-america-steve-rogers-chris-evans-marvel-cinematic-universe.jpg" alt="Follower Name" class="w-9 h-9 rounded-full">
+                            <a href="/user/steverogers" class="text-sm font-medium text-gray-900 ml-4">Steve Rogers</a>
+                        </div>
+                        <button class="text-sm font-medium text-indigo-600">Follow</button>
+                    </div>
+                </div>
+                <!-- Following Section -->
+                <div id="followingSection" class="hidden p-4">
+                    <!-- List of following -->
+                    <!-- Each following -->
+                    <div class="flex items-center justify-between space-x-4">
+                        <div class="flex items-center">
+                            <img src="https://preview.redd.it/paaxdxfdx8j11.jpg?auto=webp&s=5bd18d28f47ebcc62e24c76b25821cdb7afd68cf" alt="Following Name" class="w-9 h-9 rounded-full">
+                            <a href="/user/pepperpotts" class="text-sm font-medium text-gray-900 ml-4">Pepper Potts</a>
+                        </div>
+                        <button class="text-sm font-medium text-indigo-600">Follow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="{{ url_for('static', path='/js/user.js') }}"></script>
     </body>
 </html>
