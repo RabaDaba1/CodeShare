@@ -22,7 +22,3 @@ async def user_settings(request: Request, login: str):
 # TODO: Create a POST endpoint for starting to follow a user at /user/{username}/follow
 
 # TODO: Create a DELETE endpoint for stopping to follow a user at /user/{username}/follow
-
-# TODO: Create a GET endpoint for displaying a list of users following a user at /user/{username}/followers
-
-# TODO: Create a GET endpoint for displaying a list of users a user is following at /user/{username}/following
