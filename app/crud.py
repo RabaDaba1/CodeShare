@@ -1,4 +1,8 @@
 from fastapi import HTTPException
+from models.user import User
+from models.post_like import PostLike
+from models.comment import Comment
+from models.post import Post
 import datetime
 
 def create_user(login: str, username: str, password: str) -> User:
