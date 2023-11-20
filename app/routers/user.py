@@ -11,7 +11,7 @@ async def user_page(request: Request, login: str):
     return templates.TemplateResponse("user.html", {"request": request, "login": login})
 
 
-@router.get("/user/{login}/settings", response_class=HTMLResponse, tags=["User Settings"])
+@router.get("/user/{login}/settings", response_class=HTMLResponse, tags=["User"])
 async def user_settings(request: Request, login: str):
     return templates.TemplateResponse("user_settings.html", {"request": request, "login": login})
 
