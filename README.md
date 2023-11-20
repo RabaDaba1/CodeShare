@@ -28,7 +28,7 @@ tailwindcss
 cd app
 uvicorn main:app --reload
 ```
-On the second terminal in the / directory run
+On the second terminal in the `/` directory run
 ``` bash
 tailwindcss -i styles/main.css -o static/css/main.css --watch
 ```
