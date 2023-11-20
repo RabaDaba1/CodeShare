@@ -1,19 +1,24 @@
 # CodeShare
-A social media platform for software developers and sharing interesting code snippets.
 
-**Technology stack**:
-- **FastAPI** is used to build the main application and define all the API .
-- **Uvicorn** serves the FastAPI application.
-- **Jinja2** renders HTML templates for the frontend.
-- **SQLAlchemy** connects with a database.
-- **Tailwind** CSS framework.
+CodeShare is a social media platform designed specifically for software developers. It allows users to share interesting code snippets, follow other users, and interact with posts.
 
-## Libraries
+## Technology Stack
 
-### Instalation
-``` bash
+- **FastAPI**: Used to build the main application and define all the APIs.
+- **Uvicorn**: Serves the FastAPI application.
+- **Jinja2**: Renders HTML templates for the frontend.
+- **SQLAlchemy**: Connects with the database.
+- **Tailwind CSS**: Provides utility-first CSS framework for rapid UI development.
+
+## Installation
+
+To install the required libraries, run the following command:
+
+```bash
 pip install fastapi uvicorn Jinja2 SQLAlchemy pytailwindcss
 ```
+
+To install Tailwind CSS, run:
 ``` bash
 tailwindcss
 ```
@@ -23,23 +28,27 @@ tailwindcss
 cd app
 uvicorn main:app --reload
 ```
+On the second terminal in the `/` directory run
+``` bash
+tailwindcss -i styles/main.css -o static/css/main.css --watch
+```
 Then go to the `http://localhost:8000/`
 
 
 ## Project structure
 
 ### Directories
-Each of those folders contain:
-- `/requirements` files that lists all the Python dependencies needed.
-- `/app` main source directory of this project. It contains the core logic of this application.
-- `/models` SQLAlchemy models.
-- `/routers` FastAPI routers / API endpoints.
-- `/templates` all the HTML templates.
-- `/styles` custom css styles.
-- `/static` static CSS and JavaScript files, images etc.
+- `/app`: Contains the core logic of the application.
+- `/models`: Contains SQLAlchemy models.
+- `/routers`: Contains FastAPI routers / API endpoints.
+- `/templates`: Contains all the HTML templates.
+- `/styles`: Contains custom CSS styles.
+- `/static`: Contains static CSS and JavaScript files, images, etc.
+
 
 ### Files
-- `.env` stores environment variables.
-- `.gitignore` file to ignore files and directories.
-- `README.md` project documentation.
-- `main.py` entry point of the application where is an instance of the FastAPI class, routers linking and config.
+- `requirements.txt`: Lists all the Python dependencies needed.
+- `.env`: Stores environment variables.
+- `.gitignore`: Specifies files and directories to ignore.
+- `main.py`: Serves as the entry point of the application. It contains an instance of the FastAPI class, routers linking, and configuration.
+- `crud.py`: 

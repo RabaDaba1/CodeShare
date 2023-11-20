@@ -9,3 +9,5 @@ templates = Jinja2Templates(directory="../templates")
 @router.get("/login", response_class=HTMLResponse, tags=["Login"])
 async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+# TODO: Create a POST endpoint for the login form
