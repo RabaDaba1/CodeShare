@@ -4,6 +4,7 @@ from models.user import User
 from models.post_like import PostLike
 from models.comment import Comment
 from models.post import Post
+from models.friend import Friend
 from models.friend_request import FriendRequest
 import datetime
 
@@ -67,7 +68,7 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     
     # TODO: Implement this function
 
-def create_post(author_id: int, description: str, date: datetime, lang: enum, code: str, output: str) -> Post:
+def create_post(author_id: int, description: str, date: datetime, lang: enumerate, code: str, output: str) -> Post:
     """
     Creates a new post.
     
