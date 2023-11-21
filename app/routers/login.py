@@ -17,6 +17,7 @@ async def login_form(request: Request):
 async def login(request: Request, login: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user = get_user_by_login(db, login)
     
+    # If the user is not authenticated, raise an exception
     if not user or not authenticate_user(user, password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -27,14 +28,16 @@ async def login(request: Request, login: str = Form(...), password: str = Form(.
     # If the user is authenticated, generate a token for them
     access_token = create_access_token(data={"sub": user.login})
     
+    # Redirect the user to the feed page and set the access token as a cookie
     response = RedirectResponse(url='/feed', status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie("access_token", access_token, httponly=True)
     
+    # Return the response
     return response
 
 @router.get("/logout")
 def logout():
-    
+    # Redirect the user to the main page and delete the access token cookie
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     response.delete_cookie(key="access_token")
     

@@ -25,12 +25,17 @@ def register_user(
     password_repeat: str = Form(...),
     db: Session = Depends(get_db)
 ):
+    # Create a new user
     user = UserCreate(username=username, login=login, password=password, password_repeat=password_repeat)
     
+    # Add the user to the database
     user = create_user(db, user)
     
+    # Check if the user was added successfully
     authenticated_user = authenticate_user(user, password)
     
+    # If the user was added successfully, generate a token for them and redirect them to the feed page
+    # Otherwise, raise an exception
     if authenticated_user:
         access_token = create_access_token(data={"sub": user.login})
 
