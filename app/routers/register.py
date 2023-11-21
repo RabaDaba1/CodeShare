@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
+from sqlalchemy.orm import Session
+from crud import create_user
 router = APIRouter()
 
 templates = Jinja2Templates(directory="../templates")
@@ -10,5 +11,11 @@ templates = Jinja2Templates(directory="../templates")
 async def register_form(request: Request ):
     return templates.TemplateResponse("register.html", {"request": request})
 
-
+@router.post("/users/")
+def create_user_endpoint(login: str, username: str, password: str, repeat_password: str, db: Session = Depends(get_db)):
+    if password != repeat_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    
+    
+    return create_user(db=db, login=login, username=username, password=password, repeat_password=repeat_password)
 # TODO: Create a POST endpoint for the registration form
