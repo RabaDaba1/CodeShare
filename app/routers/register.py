@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="../templates")
 async def register_form(request: Request ):
     return templates.TemplateResponse("register.html", {"request": request})
 
-@router.post("/users/")
+@router.post("/register")
 def create_user_endpoint(login: str, username: str, password: str, repeat_password: str, db: Session = Depends(next(get_db()))):
     if password != repeat_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
