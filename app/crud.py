@@ -12,12 +12,8 @@ from werkzeug.security import generate_password_hash
 from models.user import User
 from fastapi import HTTPException
 
-<<<<<<< Updated upstream
 
 def create_user(db: Session, login: str, username: str, password: str, repeat_password: str) -> User:
-=======
-def create_user(db: Session, login: str, username: str, password: str) -> User:
->>>>>>> Stashed changes
     """
     Creates a new user.
     
@@ -110,12 +106,14 @@ def create_post(db: Session, author_id: int, description: str, date: datetime, l
         HTTPException: If the description, code, or output are too long.
     """
 
+    if db.query(User).filter(User.id == author_id).first() is None:
+        raise HTTPException(status_code=400, detail="user does not exists")
+
     if description == "":
         raise HTTPException(status_code=400, detail="description cannot be empty")
 
     new_post = Post(author_id=author_id, description=description, date=date, lang=lang, code=code, output=output)
     db.add(new_post)
-
     db.commit()
     db.refresh(new_post)
     return new_post
