@@ -86,7 +86,7 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     
     # TODO: Implement this function
 
-def create_post(author_id: int, description: str, date: datetime, lang: enumerate, code: str, output: str) -> Post:
+def create_post(db: Session, author_id: int, description: str, date: datetime, lang: enumerate, code: str, output: str) -> Post:
     """
     Creates a new post.
     
@@ -105,6 +105,16 @@ def create_post(author_id: int, description: str, date: datetime, lang: enumerat
         HTTPException: If the programming language is not supported.
         HTTPException: If the description, code, or output are too long.
     """
+
+    if description == "":
+        raise HTTPException(status_code=400, detail="description cannot be empty")
+
+    new_post = Post(author_id=author_id, description=description, date=date, lang=lang, code=code, output=output)
+    db.add(new_post)
+
+    db.commit()
+    db.refresh(new_post)
+    return new_post
     
     # TODO: Implement this function
 
