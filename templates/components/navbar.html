@@ -7,7 +7,7 @@
         </a>
         </div>
         <div class="lg:flex lg:flex-1 lg:justify-end">
-            {% if authenticated_user %}
+            {% if 'access_token' in request.cookies %}
                 <a href="/logout" class="text-sm font-semibold leading-6 text-gray-900">Log out <span aria-hidden="true">&rarr;</span></a>
             {% else %}
                 <a href="/login" class="text-sm font-semibold leading-6 text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>

@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 # Database
 from schemas import UserCreate
 from sqlalchemy.orm import Session
-from crud import create_user, authenticate_user
+from crud import create_user, authenticate_user, create_access_token
 from database import get_db
 
 router = APIRouter()
@@ -27,13 +27,15 @@ def register_user(
 ):
     user = UserCreate(username=username, login=login, password=password, password_repeat=password_repeat)
     
-    create_user(db, user)
+    user = create_user(db, user)
     
-    authenticated_user = authenticate_user(db, user.login, user.password)
+    authenticated_user = authenticate_user(user, password)
     
     if authenticated_user:
+        access_token = create_access_token(data={"sub": user.login})
+
         response = RedirectResponse(url="/feed", status_code=status.HTTP_302_FOUND)
-        response.set_cookie(key="login", value=authenticated_user.login, httponly=True)
+        response.set_cookie(key="access_token", value=access_token, httponly=True)
         return response
     else:
         raise HTTPException(status_code=400, detail="Incorrect username or password")

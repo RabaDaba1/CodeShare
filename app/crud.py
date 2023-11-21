@@ -1,7 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-import datetime
+from datetime import datetime, timedelta
+import jwt
+from schemas import UserCreate
 
 # Models
 from models.friend_request import FriendRequest
@@ -14,6 +16,10 @@ from models.user import User
 
 # Schemas
 from schemas import UserCreate
+
+SECRET_KEY = "your-secret-key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -53,15 +59,34 @@ def create_user(db: Session, user: UserCreate) -> User:
     db.refresh(db_user)
     return db_user
 
-def authenticate_user(db: Session, login: str, password: str):
-    user = db.query(User).filter(User.login == login).first()
-    if not user:
-        return False
+def authenticate_user(user: User, password: str) -> bool:
+    """
+    Authenticates a user.
+    """
     if not pwd_context.verify(password, user.hashedPassword):
         return False
-    return user
+    return True
 
-def get_user_by_login(db: Session, login: str):
+def create_access_token(*, data: dict, expires_delta: timedelta = None):
+    """
+    Creates a new access token.
+    """
+    to_encode = data.copy()
+    
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    
+    return encoded_jwt
+
+def get_user_by_login(db: Session, login: str) -> User:
+    """
+    Returns a user with the given login.
+    """
     return db.query(User).filter(User.login == login).first()
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
