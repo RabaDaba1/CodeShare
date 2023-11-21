@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\app",
+    "\\app\\models",
+    "\\app\\routers",
+    "\\env\\Include",
+    "\\env\\Lib"
+  ],
+  "SelectedNode": "\\app\\models\\user.py",
+  "PreviewInSolutionExplorer": false
+}

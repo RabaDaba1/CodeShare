@@ -7,7 +7,8 @@ router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
 
 @router.get("/register", response_class=HTMLResponse, tags=["Register"])
-async def register_form(request: Request):
+async def register_form(request: Request ):
     return templates.TemplateResponse("register.html", {"request": request})
+
 
 # TODO: Create a POST endpoint for the registration form

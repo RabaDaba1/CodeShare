@@ -1,8 +1,10 @@
+from re import A
 from fastapi import HTTPException
 from models.user import User
 from models.post_like import PostLike
 from models.comment import Comment
 from models.post import Post
+from models.friend_request import FriendRequest
 import datetime
 
 def create_user(login: str, username: str, password: str, repeat_password: str) -> User:
@@ -18,13 +20,16 @@ def create_user(login: str, username: str, password: str, repeat_password: str) 
         User: Created user object.
         
     Exceptions:
-        HTTPException: If the login is already taken.
-        HTTPException: If the passwords don't match.
-        HTTPException: If the password is too short or too long.
-        HTTPException: If the username is too short or too long.
+        HTTPException: If the login is already taken. # TODO
+        HTTPException: If the passwords don't match.  DONE
+        HTTPException: If the password is too short or too long. DONE
+        HTTPException: If the username is too short or too long. DONE
     """
     
-    # TODO: Implement this function
+    A = User(login, username, password, repeat_password)
+    return A
+    
+    # TODO: Add the login exception when database is done
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """
@@ -42,7 +47,7 @@ def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
         HTTPException: If the users are already friends.
         HTTPException: If the users are the same.
     """
-    
+        
     # TODO: Implement this function
 
 def like_post(user_id: int, post_id: int) -> PostLike:
