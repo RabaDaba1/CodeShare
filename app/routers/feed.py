@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from crud import get_user_by_username
+from crud import get_user_by_login
 from database import get_db
 
 router = APIRouter()
@@ -11,8 +11,8 @@ templates = Jinja2Templates(directory="../templates")
 
 @router.get("/feed", response_class=HTMLResponse, tags=["Feed"])
 async def feed(request: Request, db: Session = Depends(get_db)):
-    username = request.cookies.get("username")
-    user = get_user_by_username(db, username) if username else None
+    login = request.cookies.get("login")
+    user = get_user_by_login(db, login) if login else None
     return templates.TemplateResponse("feed.html", {"request": request, "authenticated_user": user})
 
 @router.get("/feed/{post_id}", response_class=HTMLResponse, tags=["Feed"])

@@ -13,7 +13,7 @@ from models.post import Post
 from models.user import User
 
 # Schemas
-from schemas.user_schemas import UserCreate
+from schemas import UserCreate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -53,16 +53,16 @@ def create_user(db: Session, user: UserCreate) -> User:
     db.refresh(db_user)
     return db_user
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = db.query(User).filter(User.username == username).first()
+def authenticate_user(db: Session, login: str, password: str):
+    user = db.query(User).filter(User.login == login).first()
     if not user:
         return False
     if not pwd_context.verify(password, user.hashedPassword):
         return False
     return user
 
-def get_user_by_username(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
+def get_user_by_login(db: Session, login: str):
+    return db.query(User).filter(User.login == login).first()
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """

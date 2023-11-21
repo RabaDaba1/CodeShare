@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 # Database
-from schemas.user_schemas import UserCreate
+from schemas import UserCreate
 from sqlalchemy.orm import Session
 from crud import create_user, authenticate_user
 from database import get_db
@@ -29,11 +29,11 @@ def register_user(
     
     create_user(db, user)
     
-    authenticated_user = authenticate_user(db, user.username, user.password)
+    authenticated_user = authenticate_user(db, user.login, user.password)
     
     if authenticated_user:
         response = RedirectResponse(url="/feed", status_code=status.HTTP_302_FOUND)
-        response.set_cookie(key="username", value=authenticated_user.username, httponly=True)
+        response.set_cookie(key="login", value=authenticated_user.login, httponly=True)
         return response
     else:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
