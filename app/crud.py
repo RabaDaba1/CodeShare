@@ -12,8 +12,12 @@ from werkzeug.security import generate_password_hash
 from models.user import User
 from fastapi import HTTPException
 
+<<<<<<< Updated upstream
 
 def create_user(db: Session, login: str, username: str, password: str, repeat_password: str) -> User:
+=======
+def create_user(db: Session, login: str, username: str, password: str) -> User:
+>>>>>>> Stashed changes
     """
     Creates a new user.
     
