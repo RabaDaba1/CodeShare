@@ -1,14 +1,19 @@
-from re import A
-from fastapi import HTTPException
+
 from models.user import User
 from models.post_like import PostLike
 from models.comment import Comment
 from models.post import Post
 from models.friend import Friend
 from models.friend_request import FriendRequest
+from sqlalchemy.orm import Session
 import datetime
+from sqlalchemy.orm import Session
+from werkzeug.security import generate_password_hash
+from models.user import User
+from fastapi import HTTPException
 
-def create_user(login: str, username: str, password: str, repeat_password: str) -> User:
+
+def create_user(db: Session, login: str, username: str, password: str, repeat_password: str) -> User:
     """
     Creates a new user.
     
@@ -21,16 +26,29 @@ def create_user(login: str, username: str, password: str, repeat_password: str) 
         User: Created user object.
         
     Exceptions:
-        HTTPException: If the login is already taken. # TODO
-        HTTPException: If the passwords don't match.  DONE
-        HTTPException: If the password is too short or too long. DONE
-        HTTPException: If the username is too short or too long. DONE
+        HTTPException: If the login is already taken.
+        HTTPException: If the passwords don't match.
+        HTTPException: If the password is too short or too long.
+        HTTPException: If the username is too short or too long.
     """
+
+    if password != repeat_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+
+    hashed_password = generate_password_hash(password)
+
+    db_user = User(username=username, login=login, password=hashed_password)
+    db.add(db_user)
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Login already taken")
+
+    db.refresh(db_user)
+    return db_user
     
-    A = User(login, username, password, repeat_password)
-    return A
-    
-    # TODO: Add the login exception when database is done
+    # TODO: Implement this function
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """
@@ -48,7 +66,7 @@ def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
         HTTPException: If the users are already friends.
         HTTPException: If the users are the same.
     """
-        
+    
     # TODO: Implement this function
 
 def like_post(user_id: int, post_id: int) -> PostLike:
