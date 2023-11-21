@@ -1,19 +1,23 @@
-
-from models.user import User
-from models.post_like import PostLike
-from models.comment import Comment
-from models.post import Post
-from models.friend import Friend
-from models.friend_request import FriendRequest
-from sqlalchemy.orm import Session
-import datetime
-from sqlalchemy.orm import Session
-from werkzeug.security import generate_password_hash
-from models.user import User
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+import datetime
 
+# Models
+from models.friend_request import FriendRequest
+from models.post_like import PostLike
+from models.user import User
+from models.comment import Comment
+from models.friend import Friend
+from models.post import Post
+from models.user import User
 
-def create_user(db: Session, login: str, username: str, password: str, repeat_password: str) -> User:
+# Schemas
+from schemas.user_schemas import UserCreate
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def create_user(db: Session, user: UserCreate) -> User:
     """
     Creates a new user.
     
@@ -32,13 +36,14 @@ def create_user(db: Session, login: str, username: str, password: str, repeat_pa
         HTTPException: If the username is too short or too long.
     """
 
-    if password != repeat_password:
+    if user.password != user.password_repeat:
         raise HTTPException(status_code=400, detail="Passwords do not match")
 
-    hashed_password = generate_password_hash(password)
+    hashed_password = pwd_context.hash(user.password)
 
-    db_user = User(username=username, login=login, password=hashed_password)
+    db_user = User(username=user.username, login=user.login, hashedPassword=hashed_password, pictureUrl="https://t4.ftcdn.net/jpg/00/64/67/27/360_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg")
     db.add(db_user)
+    
     try:
         db.commit()
     except Exception as e:
@@ -47,8 +52,14 @@ def create_user(db: Session, login: str, username: str, password: str, repeat_pa
 
     db.refresh(db_user)
     return db_user
-    
-    # TODO: Implement this function
+
+def authenticate_user(db: Session, username: str, password: str):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return False
+    if not pwd_context.verify(password, user.hashedPassword):
+        return False
+    return user
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """

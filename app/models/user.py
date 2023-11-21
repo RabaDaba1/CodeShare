@@ -9,10 +9,6 @@ class User(Base):
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     login = Column(String(16), unique=True)
     username = Column(String(32))
-    password = Column(String(32))
+    hashedPassword = Column(String(32))
     bio = Column(String(300), nullable=True)
     pictureUrl = Column(String(200), nullable=True)
-
-            
-        
-    
