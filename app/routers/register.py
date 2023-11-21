@@ -13,9 +13,11 @@ async def register_form(request: Request ):
     return templates.TemplateResponse("register.html", {"request": request})
 
 @router.post("/register")
-def create_user_endpoint(login: str, username: str, password: str, repeat_password: str, db: Session = Depends(next(get_db()))):
-    if password != repeat_password:
-        raise HTTPException(status_code=400, detail="Passwords do not match")
+def create_user_endpoint(request: Request, db: Session = Depends(get_db)):
+    # if password != repeat_password:
+    #     raise HTTPException(status_code=400, detail="Passwords do not match")
     
     
-    return create_user(db=db, login=login, username=username, password=password, repeat_password=repeat_password)
+    # create_user(db=db, login=login, username=username, password=password, repeat_password=repeat_password)
+    
+    return templates.TemplateResponse("feed.html", {"request": request})
