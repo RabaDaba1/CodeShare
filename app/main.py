@@ -2,12 +2,16 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from models import user as models_user
+from database import engine
 
 # Import the routes
 from routers import login, register, feed, user
 
 # Create an app object
 app = FastAPI()
+
+models_user.Base.metadata.create_all(bind=engine)
 
 # Include the routers
 app.include_router(login.router)
