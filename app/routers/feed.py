@@ -11,8 +11,6 @@ templates = Jinja2Templates(directory="../templates")
 
 @router.get("/feed", response_class=HTMLResponse, tags=["Feed"])
 async def feed(request: Request, db: Session = Depends(get_db)):
-    login = request.cookies.get("login")
-    user = get_user_by_login(db, login) if login else None
     return templates.TemplateResponse("feed.html", {"request": request})
 
 @router.get("/feed/{post_id}", response_class=HTMLResponse, tags=["Feed"])
