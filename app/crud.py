@@ -61,6 +61,9 @@ def authenticate_user(db: Session, username: str, password: str):
         return False
     return user
 
+def get_user_by_username(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()
+
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """
     Sends a friend request.

@@ -1,5 +1,5 @@
 # FastAPI
-from fastapi import APIRouter, HTTPException, Request, Depends, status
+from fastapi import APIRouter, HTTPException, Request, Depends, status, Form, Cookie
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -17,8 +17,6 @@ templates = Jinja2Templates(directory="../templates")
 async def register_form(request: Request ):
     return templates.TemplateResponse("register.html", {"request": request})
 
-from fastapi import Form
-
 @router.post("/register", response_class=HTMLResponse, tags=["Register"])
 def register_user(
     username: str = Form(...),
@@ -35,6 +33,7 @@ def register_user(
     
     if authenticated_user:
         response = RedirectResponse(url="/feed", status_code=status.HTTP_302_FOUND)
+        response.set_cookie(key="username", value=authenticated_user.username, httponly=True)
         return response
     else:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
