@@ -203,6 +203,9 @@ async def create_post(db: Session, author_id: str, description: str, programming
     db.refresh(new_post)
     
     return new_post
+
+def get_all_posts(db: Session):
+    return db.query(Post).all()
     
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
