@@ -1,8 +1,10 @@
 from fastapi import HTTPException
+from starlette.status import HTTP_401_UNAUTHORIZED
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import jwt
+from jwt import PyJWTError
 from schemas import UserCreate
 
 # Models
@@ -57,7 +59,9 @@ def create_user(db: Session, user: UserCreate) -> User:
         raise HTTPException(status_code=400, detail="Login already taken")
 
     db.refresh(db_user)
+    
     return db_user
+
 
 def authenticate_user(user: User, password: str) -> bool:
     """
@@ -66,6 +70,7 @@ def authenticate_user(user: User, password: str) -> bool:
     if not pwd_context.verify(password, user.hashedPassword):
         return False
     return True
+
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
     """
@@ -83,11 +88,36 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     
     return encoded_jwt
 
+
+def get_current_user(db, token: str):
+    if not token:
+        raise HTTPException(status_code=400, detail="No access token provided")
+
+    credentials_exception = HTTPException(
+        status_code=HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:        
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        login = payload.get("sub")
+        if login is None:
+            raise credentials_exception
+        user = get_user_by_login(db, login=login)
+        if user is None:
+            raise credentials_exception
+    except PyJWTError:
+        raise credentials_exception
+    return user
+
+
 def get_user_by_login(db: Session, login: str) -> User:
     """
     Returns a user with the given login.
     """
     return db.query(User).filter(User.login == login).first()
+
 
 def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     """
@@ -108,6 +138,7 @@ def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
     
     # TODO: Implement this function
 
+
 def like_post(user_id: int, post_id: int) -> PostLike:
     """
     Adds a like to a post or removes it.
@@ -125,7 +156,8 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     
     # TODO: Implement this function
 
-def create_post(db: Session, author_id: int, description: str, date: datetime, lang: enumerate, code: str, output: str) -> Post:
+
+async def create_post(db: Session, author_id: str, description: str, programming_language, code: str, output: str) -> Post:
     """
     Creates a new post.
     
@@ -133,7 +165,7 @@ def create_post(db: Session, author_id: int, description: str, date: datetime, l
         author_id (int): ID of the post's author.
         description (str): Description of the post.
         date (datetime): Date of post creation.
-        lang (enum): Programming language used in the code.
+        programming_language (enum): Programming language used in the code.
         code (str): Source code.
         output (str): Output of the code execution.
         
@@ -151,14 +183,27 @@ def create_post(db: Session, author_id: int, description: str, date: datetime, l
     if description == "":
         raise HTTPException(status_code=400, detail="description cannot be empty")
 
-    new_post = Post(author_id=author_id, description=description, date=date, lang=lang, code=code, output=output)
+    new_post = Post(
+        author_id=author_id,
+        description=description, 
+        date=datetime.now(),
+        lang=programming_language, 
+        code=code, 
+        output=output
+    )
+    
     db.add(new_post)
-    db.commit()
+    
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Login already taken")
+
     db.refresh(new_post)
+    
     return new_post
     
-    # TODO: Implement this function
-
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
     Creates a new comment.
