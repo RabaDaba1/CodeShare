@@ -177,7 +177,7 @@ async def create_post(db: Session, author_id: str, description: str, programming
         HTTPException: If the description, code, or output are too long.
     """
 
-    if db.query(User).filter(User.id == author_id).first() is None:
+    if db.query(User).filter(User.userId == author_id).first() is None:
         raise HTTPException(status_code=400, detail="user does not exists")
 
     if description == "":
@@ -204,8 +204,10 @@ async def create_post(db: Session, author_id: str, description: str, programming
     
     return new_post
 
+from sqlalchemy.orm import joinedload
+
 def get_all_posts(db: Session):
-    return db.query(Post).all()
+    return db.query(Post).options(joinedload(Post.author)).all()
     
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
