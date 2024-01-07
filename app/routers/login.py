@@ -36,7 +36,7 @@ async def login(request: Request, login: str = Form(...), password: str = Form(.
     return response
 
 @router.get("/logout")
-def logout():
+async def logout():
     # Redirect the user to the main page and delete the access token cookie
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     response.delete_cookie(key="access_token")

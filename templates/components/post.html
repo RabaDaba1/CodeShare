@@ -1,17 +1,17 @@
-<div id="POST ID" class="mx-auto bg-white rounded-xl border border-neutral-400 m-3 p-4">
+<div id="{{ post.id }}" class="mx-auto bg-white rounded-xl border border-neutral-400 m-3 p-4">
     <div class="flex items-center">
-        <img class="h-10 w-10 rounded-full object-cover" src="USERS PROFILE PICTURE" alt="Profile Picture">
+        <img class="h-10 w-10 rounded-full object-cover" src="https://www.jiomart.com/images/product/original/rv3jnpppl2/tony-stark-iron-man-avengers-infinity-war-men-s-sunglasses-spectacle-frames-silver-blue-product-images-rv3jnpppl2-3-202207021924.jpg?im=Resize=(500,630)" alt="Profile Picture">
         <div class="ml-4">
-        <div class="font-bold text-lg">USERNAME</div>
-        <div class="text-gray-600 text-sm">Posted 2 hours ago</div>
+        <div class="font-bold text-lg">{{ post.username }}</div>
+        <div class="text-gray-600 text-sm">Posted now</div>
         </div>
     </div>
     <div class="my-4">
-        <p class="text-gray-800">CODE DESCRIPTION</p>
+        <p class="text-gray-800">{{ post.description }}</p>
         <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
-        <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">PROGRAMMING LANGUAGE</div>
-        <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">CODE</pre>
-        <pre class="rounded mt-2 p-4 bg-neutral-800">CODE OUTPUT</pre>
+        <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{ post.lang }}</div>
+        <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">{{ post.code }}</pre>
+        <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
         </div>
     </div>
 
