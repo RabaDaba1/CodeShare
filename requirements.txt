@@ -3,3 +3,7 @@ uvicorn
 Jinja2
 SQLAlchemy
 pytailwindcss
+passlib
+bcrypt
+python-multipart
+pyjwt

@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import jwt
-from jwt import PyJWTError
 from schemas import UserCreate
 
 # Models
@@ -107,7 +106,7 @@ def get_current_user(db, token: str):
         user = get_user_by_login(db, login=login)
         if user is None:
             raise credentials_exception
-    except PyJWTError:
+    except jwt.PyJWTError:
         raise credentials_exception
     return user
 
