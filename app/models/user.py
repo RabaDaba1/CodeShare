@@ -6,7 +6,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    user_id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     login = Column(String(16), unique=True)
     username = Column(String(32))
     hashedPassword = Column(String(32))

@@ -3,6 +3,11 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from models import user as models_user
+from models import comment as models_comment
+from models import friend_request as models_friend_request
+from models import friend as models_friend
+from models import post_like as models_post_like
+from models import post as models_post
 from database import engine
 
 # Import the routes
@@ -12,6 +17,11 @@ from routers import login, register, feed, user
 app = FastAPI()
 
 models_user.Base.metadata.create_all(bind=engine)
+models_comment.Base.metadata.create_all(bind=engine)
+models_friend.Base.metadata.create_all(bind=engine)
+models_friend_request.Base.metadata.create_all(bind=engine)
+models_post.Base.metadata.create_all(bind=engine)
+models_post_like.Base.metadata.create_all(bind=engine)
 
 # Include the routers
 app.include_router(login.router)

@@ -38,8 +38,8 @@ async def new_post(request: Request, description: str = Form(...), programming_l
     current_user = get_current_user(db, token)
     
     # Create the post
-    create_post(db, current_user.userId, description, programming_language, code, output)
-    
+    await create_post(db, current_user.user_id, description, programming_language, code, output)
+
     # Redirect the user to the feed page
     return RedirectResponse(url="/feed", status_code=303)
 

@@ -176,7 +176,7 @@ async def create_post(db: Session, author_id: str, description: str, programming
         HTTPException: If the description, code, or output are too long.
     """
 
-    if db.query(User).filter(User.userId == author_id).first() is None:
+    if db.query(User).filter(User.user_id == author_id).first() is None:
         raise HTTPException(status_code=400, detail="user does not exists")
 
     if description == "":
@@ -197,7 +197,7 @@ async def create_post(db: Session, author_id: str, description: str, programming
         db.commit()
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail="Login already taken")
+        raise HTTPException(status_code=400, detail="Can't add post")
 
     db.refresh(new_post)
     
