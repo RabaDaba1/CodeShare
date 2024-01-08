@@ -197,6 +197,7 @@ async def create_post(db: Session, author_id: str, description: str, programming
         db.commit()
     except Exception as e:
         db.rollback()
+        print(str(e))  # print the exception details
         raise HTTPException(status_code=400, detail="Can't add post")
 
     db.refresh(new_post)

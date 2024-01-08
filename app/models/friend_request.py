@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Enum, Time, ForeignKey
+from sqlalchemy import Column, Integer, Enum, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from models.user import User
 
@@ -9,7 +9,7 @@ class FriendRequest(Base):
 
     reciver_user_id = Column(Integer, ForeignKey(User.user_id), primary_key=True)
     requester_user_id = Column(Integer, ForeignKey(User.user_id), primary_key=True)
-    date = Column(Time)
+    date = Column(DateTime)
     status = Column(Enum("accepted", "pending", "rejected"))
     
     
