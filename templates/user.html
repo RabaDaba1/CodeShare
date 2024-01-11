@@ -5,35 +5,34 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>CodeShare | {{ login }}</title>
+        <title>CodeShare | {{ user.login }}</title>
       </head>
       <body>
         {% include 'components/navbar.html' %}
 
-        <!-- TODO: Change static data to the one passed to the template-->
         <div class="container mx-auto px-4 max-w-4xl mt-24">
             <div class="grid grid-cols-4 gap-4">
                 <div class="col-span-1">
                     <div class="settings-container col-span-1 bg-white border border-neutral-400 rounded-lg p-4">
                         <div style="text-align: right;">
-                            {% if user.login == login %}
-                                <a href="/user/{{ user.login }}/settings" class="settings-icon">
+                            {% if user.login == current_user.login %}
+                                <a href="/settings" class="settings-icon">
                                     <i class="fas fa-cog"></i>
                                 </a>
                             {% endif %}
                         </div>
                         <img class="mx-auto rounded-full p-4" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="{{ user.login }}'s profile picture">
-                        <h2 class="text-xl font-bold mt-4">{{ login }}</h2>
+                        <h2 class="text-xl font-bold mt-4">{{ user.login }}</h2>
                         <p class="mt-2 text-sm text-gray-500">
                             <a href="#" id="followersLink">2137 followers</a> | 
                             <a href="#" id="followingLink">69 following</a>
                         </p>
                         <p class="mt-2 text-sm">{{ user.description }}</p>
-                        {% if user.login != login %}
+                        {% if user.login != current_user.login %}
                         <div style="text-align: right;">
                             <button 
                                 class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onclick="followUser('{{ login }}')">
+                                onclick="followUser('{{ current_user.user_id, user.user_id }}')">
                                 Follow
                             </button>
                         </div>
@@ -43,7 +42,7 @@
                 <div class="col-span-3">
                     <!-- POST -->
                     {% for post in posts %}
-                    <div id="{{ post.id }}" class="mx-auto bg-white rounded-xl border border-neutral-400 m-3 p-4">
+                    <div id="{{ post.id }}" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
                         <div class="flex items-center">
                           <img class="h-10 w-10 rounded-full object-cover" src="https://www.jiomart.com/images/product/original/rv3jnpppl2/tony-stark-iron-man-avengers-infinity-war-men-s-sunglasses-spectacle-frames-silver-blue-product-images-rv3jnpppl2-3-202207021924.jpg?im=Resize=(500,630)" alt="Profile Picture">
                           <div class="ml-4">
@@ -62,45 +61,11 @@
                   
                         <div class="flex items-center justify-start space-x-4">
                             <button class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
-                            <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-comment"></i> Comment</button>
+                            <button class="text-gray-600 hover:text-indigo-600"><a href="/feed/{{post.post_id}}"><i class="far fa-comment"></i> Comment</a></button>
                             <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-share-square"></i> Share</button>
                         </div>
                     </div>
                     {% endfor %}
-
-                    <div id="1" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
-                        <!-- Post Header -->
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full object-cover" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="Profile Picture">
-                            <div class="ml-4">
-                                <div class="font-bold text-lg">Tony Stark</div>
-                                <div class="text-gray-600 text-sm">Posted 2 hours ago</div>
-                            </div>
-                        </div>
-                    
-                        <!-- Post Content -->
-                        <div class="my-4">
-                            <p class="text-gray-800">Just finished working on the latest Iron Man suit.</p>
-                            <!-- Code Section -->
-                            <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
-                                <!-- Programming Language Label -->
-                                <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">Python</div>
-                                <!-- Code Content -->
-                                <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">for i in range(10, 0, -1):
-    print(i if i > 0 else 'Iron Man suit has launched!')</pre>
-                                <!-- Output Section -->
-                                <pre class="rounded mt-2 p-4 bg-neutral-800">10 9 8 7 6 5 4 3 2 1
-Iron Man suit has launched!</pre>
-                            </div>
-                        </div>
-                    
-                        <!-- Post Footer -->
-                        <div class="flex items-center justify-start space-x-4">
-                            <button class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
-                            <a href="/feed/1" class="text-gray-600 hover:text-indigo-600"><i class="far fa-comment"></i> Comment</a>
-                            <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-share-square"></i> Share</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

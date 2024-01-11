@@ -155,6 +155,20 @@ def unfollow_user(db: Session, requester_id: int, receiver_id: int) -> FriendReq
     """
     
     # TODO: Implement this function
+    
+def is_following(db: Session, requester_id: int, receiver_id: int) -> bool:
+    """
+    Checks if a user is following another user.
+    
+    Args:
+        requester_id (int): ID of the user sending the request.
+        receiver_id (int): ID of the user receiving the request.
+        
+    Returns:
+        bool: True if the user is following the other user, False otherwise.
+    """
+    
+    # TODO: Implement this function
 
 
 def like_post(user_id: int, post_id: int) -> PostLike:
