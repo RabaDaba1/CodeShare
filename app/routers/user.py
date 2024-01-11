@@ -23,8 +23,10 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
 
 
 @router.get("/user/{login}/settings", response_class=HTMLResponse, tags=["User"])
-async def user_settings(request: Request, login: str):
-    
+async def user_settings(request: Request, login: str, db: Session = Depends(get_db)):
+    user = get_user_by_login(db, login)
+    if user is None:
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't access other user's settings"})
     
     return templates.TemplateResponse("user_settings.html", {"request": request, "login": login})
 
