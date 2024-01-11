@@ -207,7 +207,15 @@ async def create_post(db: Session, author_id: str, description: str, programming
 from sqlalchemy.orm import joinedload
 
 def get_all_posts(db: Session):
-    return db.query(Post).options(joinedload(Post.author)).all()
+    return db.query(Post).all()
+
+def get_user_posts(db: Session, author_login: str):
+    author: User
+    try:
+        author = get_user_by_login(db, author_login)
+        return db.query(Post).filter(Post.author_id == author.user_id).all()
+    except Exception as e:
+        return []
     
 def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """

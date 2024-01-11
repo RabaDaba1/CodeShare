@@ -13,7 +13,9 @@ templates = Jinja2Templates(directory="../templates")
 @router.get("/feed", response_class=HTMLResponse, tags=["Feed"])
 async def feed(request: Request, db: Session = Depends(get_db)):
     # TODO: Get all post from the database    
-    posts = []
+
+    posts = get_all_posts(db)
+    posts.reverse()
     
     # If user is not logged in, redirect to login page
     token = request.cookies.get("access_token")
