@@ -88,7 +88,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
-def get_current_user(db, token: str):
+def get_current_user(db, token: str) -> User | None:
     if not token:
         raise HTTPException(status_code=400, detail="No access token provided")
 
@@ -111,16 +111,35 @@ def get_current_user(db, token: str):
     return user
 
 
-def get_user_by_login(db: Session, login: str) -> User:
+def get_user_by_login(db: Session, login: str) -> User | None:
     """
     Returns a user with the given login.
     """
     return db.query(User).filter(User.login == login).first()
 
 
-def send_friend_request(requester_id: int, receiver_id: int) -> FriendRequest:
+def follow_user(db: Session, requester_id: int, receiver_id: int) -> FriendRequest:
     """
-    Sends a friend request.
+    Follows a user.
+    
+    Args:
+        requester_id (int): ID of the user sending the request.
+        receiver_id (int): ID of the user receiving the request.
+        
+    Returns:
+        FriendRequest: Created friend request object.
+        
+    Exceptions:
+        HTTPException: If the request already exists.
+        HTTPException: If the users are already friends.
+        HTTPException: If the users are the same.
+    """
+    
+    # TODO: Implement this function
+    
+def unfollow_user(db: Session, requester_id: int, receiver_id: int) -> FriendRequest:
+    """
+    Unfollows a user.
     
     Args:
         requester_id (int): ID of the user sending the request.
@@ -236,3 +255,22 @@ def create_comment(author_id: int, post_id: int, content: str, date: datetime) -
     """
     
     # TODO: Implement this function
+    
+def update_user(db: Session, user_id: int, username: str, login: str, description: str, picture_url: str) -> User:
+    """
+    Updates user information.
+    
+    Args:
+        user_id (int): ID of the user.
+        username (str): New username.
+        login (str): New login.
+        picture_url (str): New picture URL.
+        
+    Returns:
+        User: Updated user object.
+        
+    Exceptions:
+        HTTPException: If the user does not exist.
+        HTTPException: If the login is already taken.
+        HTTPException: If the username is too short or too long.
+    """

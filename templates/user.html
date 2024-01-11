@@ -14,21 +14,30 @@
         <div class="container mx-auto px-4 max-w-4xl mt-24">
             <div class="grid grid-cols-4 gap-4">
                 <div class="col-span-1">
-                    <div class="col-span-1 bg-white border border-neutral-400 rounded-lg p-4">
+                    <div class="settings-container col-span-1 bg-white border border-neutral-400 rounded-lg p-4">
                         <div style="text-align: right;">
                             {% if user.login == login %}
-                                <a href="/user/{{ user.login }}/settings">
+                                <a href="/user/{{ user.login }}/settings" class="settings-icon">
                                     <i class="fas fa-cog"></i>
                                 </a>
                             {% endif %}
                         </div>
-                        <img class="mx-auto rounded-full p-4" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="{{ login }}'s profile picture">
+                        <img class="mx-auto rounded-full p-4" src="https://m.media-amazon.com/images/I/71JpPdKSEAL._AC_UY1100_.jpg" alt="{{ user.login }}'s profile picture">
                         <h2 class="text-xl font-bold mt-4">{{ login }}</h2>
                         <p class="mt-2 text-sm text-gray-500">
                             <a href="#" id="followersLink">2137 followers</a> | 
                             <a href="#" id="followingLink">69 following</a>
                         </p>
-                        <p class="mt-2 text-sm">Hi, I'm Tony Stark, also known as Iron Man. "A genius, billionaire, playboy and philanthropist".</p>
+                        <p class="mt-2 text-sm">{{ user.description }}</p>
+                        {% if user.login != login %}
+                        <div style="text-align: right;">
+                            <button 
+                                class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onclick="followUser('{{ login }}')">
+                                Follow
+                            </button>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-span-3">
@@ -151,7 +160,17 @@ Iron Man suit has launched!</pre>
                 </div>
             </div>
         </div>
-        
+        <style>
+            .settings-container {
+                position: relative;
+            }
+            
+            .settings-icon {
+                position: absolute;
+                top: 0.8rem;
+                right: 0.8rem;
+            }
+        </style>
         <script src="{{ url_for('static', path='/js/user.js') }}"></script>
     </body>
 </html>

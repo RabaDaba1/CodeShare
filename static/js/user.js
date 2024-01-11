@@ -49,3 +49,20 @@ elements.followingTab.addEventListener('click', showFollowing);
 
 // Add event listener to close button
 elements.close.addEventListener('click', closeModal);
+
+function followUser(login) {
+    fetch(`/user/${login}/follow`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ login: login })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response data here
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
