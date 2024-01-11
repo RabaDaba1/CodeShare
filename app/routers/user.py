@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from crud import get_user_posts
+from crud import get_user_posts, get_current_user
 from database import get_db
 from sqlalchemy.orm import Session
+from models.user import User
 
 router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
@@ -13,8 +14,10 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     # TODO: Get user data from the database and pass it to the template
 
     posts = get_user_posts(db, login)
+    
+    current_user = get_current_user(db, request.cookies.get("access_token"))
 
-    return templates.TemplateResponse("user.html", {"request": request, "login": login, "posts": posts})
+    return templates.TemplateResponse("user.html", {"request": request, "login": login, "posts": posts, "user": current_user})
 
 
 @router.get("/user/{login}/settings", response_class=HTMLResponse, tags=["User"])
