@@ -11,18 +11,18 @@ templates = Jinja2Templates(directory="../templates")
 
 @router.get("/user/{login}", response_class=HTMLResponse, tags=["User"])
 async def user_page(request: Request, login: str, db: Session = Depends(get_db)):
+    # Not logged in users can't see user pages
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login", status_code=303)
+
+    # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for."})
     
     posts = get_user_posts(db, login)
-    
-    token = request.cookies.get("access_token")
-    if not token:
-        return RedirectResponse(url="/login", status_code=303)
-    
     current_user = get_current_user(db, token)
-
     follows = is_following(db, current_user.user_id, user.user_id)
 
     return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, "follows": follows})
