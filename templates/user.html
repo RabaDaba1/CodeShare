@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-span-3">
                     <!-- POST -->
-                    {% for post in posts %}
+                    {% for (author, post) in posts %}
                         {% include 'components/post.html' %}
                     {% endfor %}
                 </div>

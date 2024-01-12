@@ -112,6 +112,12 @@ def get_current_user(db, token: str) -> User | None:
     return user
 
 
+def get_user_by_id(db: Session, user_id: int) -> User | None:
+    """
+    Returns a user with the given ID.
+    """
+    return db.query(User).filter(User.user_id == user_id).first()
+
 def get_user_by_login(db: Session, login: str) -> User | None:
     """
     Returns a user with the given login.
@@ -196,6 +202,20 @@ def is_following(db: Session, follower_id: int, following_id: int) -> bool:
 
     return follower is not None
 
+def get_following_users(db: Session, user_id: int):
+    """
+    Returns a list of users that the user follows.
+    
+    Args:
+        user_id (int): ID of the user.
+        
+    Returns:
+        List[User]: List of users that the user follows.
+    """
+    
+    following = db.query(Follower).filter(Follower.follower_id == user_id).all()
+
+    return following
 
 def like_post(user_id: int, post_id: int) -> PostLike:
     """
@@ -263,15 +283,13 @@ async def create_post(db: Session, author_id: str, description: str, programming
     
     return new_post
 
-from sqlalchemy.orm import joinedload
-
 def get_all_posts(db: Session):
     return db.query(Post).all()
 
-def get_user_posts(db: Session, author_login: str):
+def get_user_posts(db: Session, user_id: str):
     author: User
     try:
-        author = get_user_by_login(db, author_login)
+        author = db.query(User).filter(User.user_id == user_id).first()
         return db.query(Post).filter(Post.author_id == author.user_id).all()
     except Exception as e:
         return []

@@ -22,7 +22,8 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for."})
     
-    posts = get_user_posts(db, login)
+    posts = [[user, post] for post in get_user_posts(db, user.user_id)]
+    posts.sort(key=lambda post: post[1].date, reverse=True)
     current_user = get_current_user(db, token)
     follows = is_following(db, current_user.user_id, user.user_id)
 
