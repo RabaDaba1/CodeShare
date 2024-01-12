@@ -118,7 +118,6 @@ def get_user_by_login(db: Session, login: str) -> User | None:
     """
     return db.query(User).filter(User.login == login).first()
 
-
 def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     """
     Follows a user.
@@ -133,8 +132,7 @@ def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     Exceptions:
         HTTPException: If the follower_id and following_id are the same.
         HTTPException: If the follower is already following the user.
-"""
-    print('follow works!')
+    """
 
     if follower_id == following_id:
         raise HTTPException(status_code=400, detail="Users are the same")
@@ -149,11 +147,11 @@ def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
         db.rollback()
         raise HTTPException(status_code=400, detail="User is already following")
 
-    print('follow works!')
+    db.refresh(follower)
 
     return follower
     
-def unfollow_user(db: Session, follower_id: int, following_id: int) -> Follower:
+def unfollow_user(db: Session, follower_id: int, following_id: int):
     """
     Unfollows a user.
     
@@ -168,7 +166,7 @@ def unfollow_user(db: Session, follower_id: int, following_id: int) -> Follower:
         HTTPException: If the follower_id and following_id are the same.
         HTTPException: If the follower is not following the user.
     """
-    
+
     if follower_id == following_id:
         raise HTTPException(status_code=400, detail="Users are the same")
 

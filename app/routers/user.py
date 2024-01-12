@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from crud import get_user_posts, get_current_user, get_user_by_login, follow_user, unfollow_user, update_user, is_following
+from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following
 from database import get_db
 from sqlalchemy.orm import Session
 from models.user import User
+import crud
 
 router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
@@ -75,12 +76,12 @@ async def follow_user(request: Request, login: str, db: Session = Depends(get_db
     current_user = get_current_user(db, request.cookies.get("access_token"))
     
     # Follow user
-    follow_user(db, current_user.user_id, user.user_id)
+    crud.follow_user(db, current_user.user_id, user.user_id)
     
-    return templates.TemplateResponse("user.html", {"request": request, "user": user, "current_user": current_user})
+    return RedirectResponse(url=f"/user/{login}", status_code=303)
 
 # TODO: Create a DELETE endpoint for stopping to follow a user at /user/{username}/follow
-@router.delete("/user/{login}/unfollow", response_class=HTMLResponse, tags=["User"])
+@router.post("/user/{login}/unfollow", response_class=HTMLResponse, tags=["User"])
 async def unfollow_user(request: Request, login: str, db: Session = Depends(get_db)):
     # Check if the user exists
     user = get_user_by_login(db, login)
@@ -91,6 +92,6 @@ async def unfollow_user(request: Request, login: str, db: Session = Depends(get_
     current_user = get_current_user(db, request.cookies.get("access_token"))
     
     # Unfollow user
-    unfollow_user(db, current_user.user_id, user.user_id)
+    crud.unfollow_user(db, current_user.user_id, user.user_id)
     
-    return templates.TemplateResponse("user.html", {"request": request, "user": user, "current_user": current_user})
+    return RedirectResponse(url=f"/user/{login}", status_code=303)

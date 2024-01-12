@@ -30,11 +30,23 @@
                         <p class="mt-2 text-sm">{{ user.description }}</p>
                         {% if user.login != current_user.login %}
                         <div style="text-align: right;">
-                            <button 
-                                class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onclick="followUser('{{ current_user.user_id }}', '{{ user.user_id }}')">
-                                Follow
-                            </button>
+                            {% if not follows %}
+                            <form action="/user/{{ user.login }}/follow" method="post">
+                                <input 
+                                    type="submit" 
+                                    value="Follow" 
+                                    class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                            </form>
+                            {% else %}
+                            <form action="/user/{{ user.login }}/unfollow" method="post">
+                                <input 
+                                    type="submit" 
+                                    value="Unfollow" 
+                                    class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                            </form>
+                            {% endif %}
                         </div>
                         {% endif %}
                     </div>
@@ -42,29 +54,7 @@
                 <div class="col-span-3">
                     <!-- POST -->
                     {% for post in posts %}
-                    <div id="{{ post.id }}" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
-                        <div class="flex items-center">
-                          <img class="h-10 w-10 rounded-full object-cover" src="https://www.jiomart.com/images/product/original/rv3jnpppl2/tony-stark-iron-man-avengers-infinity-war-men-s-sunglasses-spectacle-frames-silver-blue-product-images-rv3jnpppl2-3-202207021924.jpg?im=Resize=(500,630)" alt="Profile Picture">
-                          <div class="ml-4">
-                          <div class="font-bold text-lg">{{ post.username }}</div>
-                          <div class="text-gray-600 text-sm">Posted now</div>
-                          </div>
-                        </div>
-                        <div class="my-4">
-                          <p class="text-gray-800">{{ post.description }}</p>
-                          <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
-                            <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{ post.lang }}</div>
-                            <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">{{ post.code }}</pre>
-                            <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
-                          </div>
-                        </div>
-                  
-                        <div class="flex items-center justify-start space-x-4">
-                            <button class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
-                            <button class="text-gray-600 hover:text-indigo-600"><a href="/feed/{{post.post_id}}"><i class="far fa-comment"></i> Comment</a></button>
-                            <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-share-square"></i> Share</button>
-                        </div>
-                    </div>
+                        {% include 'components/post.html' %}
                     {% endfor %}
                 </div>
             </div>
