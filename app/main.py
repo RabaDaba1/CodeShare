@@ -4,8 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from models import user as models_user
 from models import comment as models_comment
-from models import friend_request as models_friend_request
-from models import friend as models_friend
+from models import follower as models_follower
 from models import post_like as models_post_like
 from models import post as models_post
 from database import engine
@@ -18,8 +17,7 @@ app = FastAPI()
 
 models_user.Base.metadata.create_all(bind=engine)
 models_comment.Base.metadata.create_all(bind=engine)
-models_friend.Base.metadata.create_all(bind=engine)
-models_friend_request.Base.metadata.create_all(bind=engine)
+models_follower.Base.metadata.create_all(bind=engine)
 models_post.Base.metadata.create_all(bind=engine)
 models_post_like.Base.metadata.create_all(bind=engine)
 

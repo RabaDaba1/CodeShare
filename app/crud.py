@@ -7,13 +7,14 @@ import jwt
 from schemas import UserCreate
 
 # Models
-from models.friend_request import FriendRequest
 from models.post_like import PostLike
 from models.user import User
 from models.comment import Comment
-from models.friend import Friend
+from models.follower import Follower
 from models.post import Post
 from models.user import User
+
+from sqlalchemy.exc import IntegrityError
 
 # Schemas
 from schemas import UserCreate
@@ -118,57 +119,84 @@ def get_user_by_login(db: Session, login: str) -> User | None:
     return db.query(User).filter(User.login == login).first()
 
 
-def follow_user(db: Session, requester_id: int, receiver_id: int) -> FriendRequest:
+def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     """
     Follows a user.
     
     Args:
-        requester_id (int): ID of the user sending the request.
-        receiver_id (int): ID of the user receiving the request.
+        follower_id (int): ID of the user who wants to follow.
+        following_id (int): ID of the user to be followed.
         
     Returns:
-        FriendRequest: Created friend request object.
+        Follower: Created follower object.
         
     Exceptions:
-        HTTPException: If the request already exists.
-        HTTPException: If the users are already friends.
-        HTTPException: If the users are the same.
-    """
+        HTTPException: If the follower_id and following_id are the same.
+        HTTPException: If the follower is already following the user.
+"""
+    print('follow works!')
+
+    if follower_id == following_id:
+        raise HTTPException(status_code=400, detail="Users are the same")
+
+    follower = Follower(follower_id=follower_id, following_id=following_id)
+
+    db.add(follower)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="User is already following")
+
+    print('follow works!')
+
+    return follower
     
-    # TODO: Implement this function
-    
-def unfollow_user(db: Session, requester_id: int, receiver_id: int) -> FriendRequest:
+def unfollow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     """
     Unfollows a user.
     
     Args:
-        requester_id (int): ID of the user sending the request.
-        receiver_id (int): ID of the user receiving the request.
+        follower_id (int): ID of the user who wants to unfollow.
+        following_id (int): ID of the user to be unfollowed.
         
     Returns:
-        FriendRequest: Created friend request object.
+        dict: A message indicating the operation was successful.
         
     Exceptions:
-        HTTPException: If the request already exists.
-        HTTPException: If the users are already friends.
-        HTTPException: If the users are the same.
+        HTTPException: If the follower_id and following_id are the same.
+        HTTPException: If the follower is not following the user.
     """
     
-    # TODO: Implement this function
+    if follower_id == following_id:
+        raise HTTPException(status_code=400, detail="Users are the same")
+
+    follower = db.query(Follower).filter(Follower.follower_id == follower_id, Follower.following_id == following_id).first()
+
+    if not follower:
+        raise HTTPException(status_code=400, detail="User is not following")
+
+    db.delete(follower)
+    db.commit()
+
+    return {"detail": "Unfollowed successfully"}
     
-def is_following(db: Session, requester_id: int, receiver_id: int) -> bool:
+def is_following(db: Session, follower_id: int, following_id: int) -> bool:
     """
     Checks if a user is following another user.
     
     Args:
-        requester_id (int): ID of the user sending the request.
-        receiver_id (int): ID of the user receiving the request.
+        follower_id (int): ID of the user who might be following.
+        following_id (int): ID of the user who might be followed.
         
     Returns:
         bool: True if the user is following the other user, False otherwise.
     """
     
-    # TODO: Implement this function
+    follower = db.query(Follower).filter(Follower.follower_id == follower_id, Follower.following_id == following_id).first()
+
+    return follower is not None
 
 
 def like_post(user_id: int, post_id: int) -> PostLike:
