@@ -60,7 +60,7 @@ async def update_user(request: Request, db: Session = Depends(get_db)):
     # Update user
     update_user(db, current_user.user_id, user.user_id)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "login": login})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
 # TODO: Create a DELETE endpoint for deleting user account at /user/{username}
 
 # TODO: Create a POST endpoint for starting to follow a user at /user/{username}/follow
