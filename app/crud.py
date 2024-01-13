@@ -202,7 +202,7 @@ def is_following(db: Session, follower_id: int, following_id: int) -> bool:
 
     return follower is not None
 
-def get_following_users(db: Session, user_id: int):
+def get_followed(db: Session, user_id: int):
     """
     Returns a list of users that the user follows.
     
@@ -213,9 +213,24 @@ def get_following_users(db: Session, user_id: int):
         List[User]: List of users that the user follows.
     """
     
-    following = db.query(Follower).filter(Follower.follower_id == user_id).all()
+    followed = db.query(Follower).filter(Follower.follower_id == user_id).all()
 
-    return following
+    return followed
+
+def get_followers(db: Session, user_id: int):
+    """
+    Returns a list of users that follow the user.
+    
+    Args:
+        user_id (int): ID of the user.
+        
+    Returns:
+        List[User]: List of users that follow the user.
+    """
+    
+    followers = db.query(Follower).filter(Follower.following_id == user_id).all()
+
+    return followers
 
 def like_post(user_id: int, post_id: int) -> PostLike:
     """

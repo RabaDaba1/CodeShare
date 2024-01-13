@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following
+from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following, get_followers, get_followed
 from database import get_db
 from sqlalchemy.orm import Session
 from models.user import User
@@ -27,7 +27,16 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     current_user = get_current_user(db, token)
     follows = is_following(db, current_user.user_id, user.user_id)
 
-    return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, "follows": follows})
+    followers = get_followers(db, user.user_id)
+    followed= get_followed(db, user.user_id)
+
+    if followed is None:
+        followed = []
+    
+    if followers is None:
+        followers = []
+
+    return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, "follows": follows, "followers": len(followers), "followed": len(followed)})
 
 
 @router.get("/settings", response_class=HTMLResponse, tags=["User"])
@@ -38,7 +47,7 @@ async def user_settings(request: Request, db: Session = Depends(get_db)):
     
     user = get_current_user(db, token)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "login": user.login})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
 
 # TODO: Create a PUT endpoint for updating user information at /user/{username}/settings
 @router.put("/settings", response_class=HTMLResponse, tags=["User"])

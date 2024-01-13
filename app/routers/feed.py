@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
-from crud import create_post, get_current_user, get_user_posts, get_following_users, get_user_by_id
+from crud import create_post, get_current_user, get_user_posts, get_followed, get_user_by_id, get_followers
 from database import get_db
 
 router = APIRouter()
@@ -19,11 +19,11 @@ async def feed(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login", status_code=303)
 
     current_user = get_current_user(db, token)
-    following_users = get_following_users(db, current_user.user_id)
+    followed = get_followed(db, current_user.user_id)
 
     posts = []
 
-    for user in following_users:
+    for user in followed:
         posts.extend(get_user_posts(db, user.following_id))
 
     posts.extend(get_user_posts(db, current_user.user_id))
