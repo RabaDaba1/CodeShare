@@ -10,7 +10,7 @@ from models import post as models_post
 from database import engine
 
 # Import the routes
-from routers import login, register, feed, user
+from routers import login, register, feed, user, search
 
 # Create an app object
 app = FastAPI()
@@ -26,6 +26,7 @@ app.include_router(login.router)
 app.include_router(register.router)
 app.include_router(feed.router)
 app.include_router(user.router)
+app.include_router(search.router)
 
 # Mount the templates and static folders
 templates = Jinja2Templates(directory="../templates")

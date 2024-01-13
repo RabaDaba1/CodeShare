@@ -6,6 +6,19 @@
             <img class="h-6 w-auto" src="/static/images/logo.png" alt="">
         </a>
         </div>
+        {% if 'access_token' in request.cookies and request.path not in ['/', '/login', '/register'] %}
+        <div class="flex lg:flex-1 lg:justify-center ">
+            <div class="relative">
+                <form id="search-form" action="/search" method="GET" class="flex items-center px-1.5 rounded-l border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input id="search-input" type="text" name="username" placeholder="Search users" required class="border-none focus:outline-none focus:ring-0">
+                    <button type="submit" class="px-3 py-1 rounded-r-md text-gray-300">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                <div id="search-results" class="absolute bg-white w-full z-10 border-gray-300"></div>
+            </div>
+        </div>
+        {% endif %}
         <div class="lg:flex lg:flex-1 lg:justify-end">
             {% if 'access_token' in request.cookies %}
                 <a href="/logout" class="text-sm font-semibold leading-6 text-gray-900">Log out <span aria-hidden="true">&rarr;</span></a>
@@ -15,3 +28,73 @@
         </div>
     </nav>
 </header>
+
+<style>
+    .user {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+    .user img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user a {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#search-form").on('submit', function(event){
+          event.preventDefault();
+          $.ajax({
+            url: '/search/?username=' + $('#search-input').val(),
+            dataType: 'json',
+            success: function(data) {
+              // Clear previous results
+              $('#search-results').empty();
+          
+              // Add new results
+              if (data.length > 0) {
+                data.forEach(function(user) {
+                  $('#search-results').append(`
+                    <div class="user flex items-center p-2">
+                      <a href="/profile/${user.user_id}" class="flex items-center">
+                        <img class="w-5 h-5 rounded-full mr-2" src="${user.pictureUrl}" alt="${user.username}'s profile picture">
+                        <p>${user.username}</p>
+                      </a>
+                    </div>
+                  `);
+                });
+      
+                // Add border to search results
+                $('#search-results').addClass('border-b border-l border-r border-gray-300');
+      
+                // Change form border
+                $('#search-form').removeClass('rounded-l').addClass('rounded-t');
+              } else {
+                // Remove border from search results
+                $('#search-results').removeClass('border-b border-l border-r border-gray-300');
+      
+                // Change form border back
+                $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+              }
+            }
+          });
+        });
+      
+        // Clear search results and reset form border when mouse click occurs outside search results or form
+        $(document).on('mousedown', function(event) {
+          if (!$(event.target).closest('#search-form, #search-results').length) {
+            $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
+            $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+          }
+        });
+      });
+</script>

@@ -347,3 +347,6 @@ def update_user(db: Session, user_id: int, username: str, login: str, descriptio
         HTTPException: If the login is already taken.
         HTTPException: If the username is too short or too long.
     """
+    
+def get_similar_users(db: Session, username: str):
+    return db.query(User).filter(User.username.ilike(f"%{username}%")).all()
