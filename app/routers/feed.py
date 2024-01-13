@@ -49,6 +49,7 @@ async def new_post(request: Request, description: str = Form(...), programming_l
     current_user = crud_user.get_current_user(db, token)
     
     # Create the post
+    code = '\n'.join([line.lstrip() for line in code.split('\n')])
     await crud_post.create_post(db, current_user.user_id, description, programming_language, code, output)
 
     # Redirect the user to the feed page
