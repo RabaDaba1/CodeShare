@@ -22,7 +22,7 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for."})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for.", "current_user": get_current_user(db, token)})
     
     # Get the user's posts
     posts = [[user, post] for post in get_user_posts(db, user.user_id)]
@@ -90,7 +90,7 @@ async def user_settings(request: Request, db: Session = Depends(get_db)):
     
     user = get_current_user(db, token)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "current_user": user})
 
 
 @router.post("/settings", response_class=HTMLResponse, tags=["Settings"])
@@ -116,6 +116,6 @@ async def update_user(request: Request, username: str = Form(None), bio: str = F
     
     crud.update_user(db, user, user_update)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "current_user": user})
 
 # TODO: Create a DELETE endpoint for deleting user account at /user/{username}
