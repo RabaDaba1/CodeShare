@@ -62,7 +62,6 @@ def create_user(db: Session, user: UserCreate) -> User:
     
     return db_user
 
-
 def authenticate_user(user: User, password: str) -> bool:
     """
     Authenticates a user.
@@ -70,7 +69,6 @@ def authenticate_user(user: User, password: str) -> bool:
     if not pwd_context.verify(password, user.hashedPassword):
         return False
     return True
-
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
     """
@@ -87,7 +85,6 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     
     return encoded_jwt
-
 
 def get_current_user(db, token: str) -> User | None:
     if not token:
@@ -110,7 +107,6 @@ def get_current_user(db, token: str) -> User | None:
     except jwt.PyJWTError:
         raise credentials_exception
     return user
-
 
 def get_user_by_id(db: Session, user_id: int) -> User | None:
     """
@@ -249,7 +245,6 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     
     # TODO: Implement this function
 
-
 async def create_post(db: Session, author_id: str, description: str, programming_language, code: str, output: str) -> Post:
     """
     Creates a new post.
@@ -301,6 +296,9 @@ async def create_post(db: Session, author_id: str, description: str, programming
 def get_all_posts(db: Session):
     return db.query(Post).all()
 
+def get_post_by_id(db:Session, post_id: int):
+    return db.query(Post).filter(Post.post_id == post_id).first()
+
 def get_user_posts(db: Session, user_id: str):
     author: User
     try:
@@ -309,7 +307,7 @@ def get_user_posts(db: Session, user_id: str):
     except Exception as e:
         return []
     
-def create_comment(author_id: int, post_id: int, content: str, date: datetime) -> Comment:
+async def create_comment(db: Session, author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
     Creates a new comment.
     
@@ -327,8 +325,47 @@ def create_comment(author_id: int, post_id: int, content: str, date: datetime) -
         HTTPException: If the content is too long.
     """
     
-    # TODO: Implement this function
+    if db.query(Post).filter(Post.post_id == post_id).first() is None:
+        raise HTTPException(status_code=400, detail="Post does not exist")
+    if len(content) > 200:
+        raise HTTPException(status_code=400, detail="Content is too long")
+    new_comment = Comment(
+        author_id=author_id,
+        post_id=post_id,
+        content=content,
+        date=date
+    )
+    db.add(new_comment)
+    db.commit()
+    db.refresh(new_comment)
+    return new_comment
+
+def get_post_comments(db: Session, post_id: int):
+    """
+    Returns a list of comments of a post.
     
+    Args:
+        post_id (int): ID of the post.
+        
+    Returns:
+        List[Comment]: List of comments of the post.
+    """
+    
+    return db.query(Comment).filter(Comment.post_id == post_id).all()
+
+def get_comment_by_id(db: Session, comment_id: int):
+    """
+    Returns a comment with the given ID.
+    
+    Args:
+        comment_id (int): ID of the comment.
+        
+    Returns:
+        Comment: Comment with the given ID.
+    """
+    
+    return db.query(Comment).filter(Comment.comment_id == comment_id).first()
+  
 def update_user(db: Session, user_id: int, username: str, login: str, description: str, picture_url: str) -> User:
     """
     Updates user information.

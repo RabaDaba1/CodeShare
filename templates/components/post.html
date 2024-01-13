@@ -3,7 +3,7 @@
         <img class="h-10 w-10 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture">
         <div class="ml-4">
         <div class="font-bold text-lg"><a href="/user/{{author.login}}">{{ author.username }}<a></div>
-        <div class="text-gray-600 text-sm">Posted now</div>
+        <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
         </div>
     </div>
     <div class="my-4">
@@ -17,7 +17,11 @@
 
     <div class="flex items-center justify-start space-x-4">
         <button class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
-        <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-comment"></i> Comment</button>
+        <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
+            <i class="far fa-comment"></i> Comment
+        </a>
         <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-share-square"></i> Share</button>
     </div>
 </div>
+
+<script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
