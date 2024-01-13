@@ -50,51 +50,56 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $("#search-form").on('submit', function(event){
-          event.preventDefault();
-          $.ajax({
-            url: '/search/?username=' + $('#search-input').val(),
-            dataType: 'json',
-            success: function(data) {
-              // Clear previous results
-              $('#search-results').empty();
-          
-              // Add new results
-              if (data.length > 0) {
-                data.forEach(function(user) {
-                  $('#search-results').append(`
-                    <div class="user flex items-center p-2">
-                      <a href="/user/${user.login}" class="flex items-center">
-                        <img class="w-5 h-5 rounded-full mr-2" src="${user.pictureUrl}" alt="${user.username}'s profile picture">
-                        <p>${user.username}</p>
-                      </a>
-                    </div>
-                  `);
-                });
-      
-                // Add border to search results
-                $('#search-results').addClass('border-b border-l border-r border-gray-300');
-      
-                // Change form border
-                $('#search-form').removeClass('rounded-l').addClass('rounded-t');
-              } else {
-                // Remove border from search results
-                $('#search-results').removeClass('border-b border-l border-r border-gray-300');
-      
-                // Change form border back
-                $('#search-form').removeClass('rounded-t').addClass('rounded-l');
-              }
-            }
-          });
-        });
-      
-        // Clear search results and reset form border when mouse click occurs outside search results or form
-        $(document).on('mousedown', function(event) {
-          if (!$(event.target).closest('#search-form, #search-results').length) {
-            $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
-            $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+  $(document).ready(function(){
+      $("#search-input").on('input', function(){
+          var query = $(this).val();
+          if (query.length > 0) {
+              $.ajax({
+                  url: '/search/?username=' + query,
+                  dataType: 'json',
+                  success: function(data) {
+                      // Clear previous results
+                      $('#search-results').empty();
+                  
+                      // Add new results
+                      if (data.length > 0) {
+                          data.forEach(function(user) {
+                              $('#search-results').append(`
+                                  <div class="user flex items-center p-2">
+                                      <a href="/user/${user.login}" class="flex items-center">
+                                          <img class="w-5 h-5 rounded-full mr-2" src="${user.pictureUrl}" alt="${user.username}'s profile picture">
+                                          <p>${user.username}</p>
+                                      </a>
+                                  </div>
+                              `);
+                          });
+                  
+                          // Add border to search results
+                          $('#search-results').addClass('border-b border-l border-r border-gray-300');
+                  
+                          // Change form border
+                          $('#search-form').removeClass('rounded-l').addClass('rounded-t');
+                      } else {
+                          // Remove border from search results
+                          $('#search-results').removeClass('border-b border-l border-r border-gray-300');
+                  
+                          // Change form border back
+                          $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+                      }
+                  }
+              });
+          } else {
+              $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
+              $('#search-form').removeClass('rounded-t').addClass('rounded-l');
           }
-        });
       });
-</script>
+    
+      // Clear search results and reset form border when mouse click occurs outside search results or form
+      $(document).on('mousedown', function(event) {
+          if (!$(event.target).closest('#search-form, #search-results').length) {
+              $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
+              $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+          }
+      });
+  });
+  </script>
