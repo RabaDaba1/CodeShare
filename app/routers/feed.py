@@ -35,6 +35,7 @@ async def feed(request: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse("feed.html", {"request": request, "posts": posts_with_authors, "current_user": current_user})
 
+
 @router.get("/feed/{post_id}", response_class=HTMLResponse, tags=["Feed"])
 async def post_detailed(request: Request, post_id: int, db: Session = Depends(get_db)):  
 
@@ -46,8 +47,9 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
 
     return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments})
 
+
 @router.post("/feed", response_model_exclude_unset=True)
-async def new_post(request: Request, description: str = Form(...), programming_language: str = Form(...), code: str = Form(...), output: str = Form(...), db: Session = Depends(get_db)):
+async def new_post(request: Request, description: str = Form(...), programming_language: str = Form(...), code: str = Form(...), output: str = Form(None), db: Session = Depends(get_db)):
     # Get the access token from the cookie
     token = request.cookies.get("access_token")
     
@@ -62,6 +64,7 @@ async def new_post(request: Request, description: str = Form(...), programming_l
 
     # Redirect the user to the feed page
     return RedirectResponse(url="/feed", status_code=303)
+
 
 @router.post("/feed/{post_id}/comment")
 async def new_comment(request: Request, post_id: int, content: str = Form(...), db: Session = Depends(get_db)):
@@ -79,6 +82,7 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
 
     # Redirect the user to the feed page
     return RedirectResponse(url=f"/feed/{post_id}", status_code=303)
+
 
 # TODO: Create a PUT endpoint for the post edition form at /feed/{post_id}
 

@@ -33,7 +33,9 @@
                     <!-- Code Content -->
                     <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">{{post.code}}</pre>
                     <!-- Output Section -->
-                    <pre class="rounded mt-2 p-4 bg-neutral-800">{{post.output}}</pre>
+                    {% if post.output %}
+                        <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
+                    {%endif%}
                 </div>
             </div>
         
