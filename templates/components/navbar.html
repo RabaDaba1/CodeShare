@@ -100,7 +100,6 @@
       $(document).on('mousedown', function(event) {
           if (!$(event.target).closest('#search-form, #search-results').length) {
               $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
-              $('#search-form').removeClass('rounded-t').addClass('rounded-l');
           }
       });
   });

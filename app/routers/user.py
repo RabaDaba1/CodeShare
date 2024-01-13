@@ -60,7 +60,7 @@ async def follow_user(request: Request, login: str, db: Session = Depends(get_db
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't follow a non-existing user"})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't follow a non-existing user", "current_user": current_user})
     
     # Follow user
     crud.follow_user(db, current_user.user_id, user.user_id)
@@ -81,7 +81,7 @@ async def unfollow_user(request: Request, login: str, db: Session = Depends(get_
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't unfollow a non-existing user"})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't unfollow a non-existing user", "current_user": current_user})
 
     # Unfollow user
     crud.unfollow_user(db, current_user.user_id, user.user_id)
@@ -112,11 +112,11 @@ async def update_user(request: Request, username: str = Form(None), bio: str = F
     
     # Check if the user is the same as the current user
     if current_user.user_id != current_user.user_id:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update other user's settings"})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update other user's settings", "current_user": current_user})
     
     # Check if the user exists
     if current_user is None:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update a non-existing user"})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update a non-existing user", "current_user": current_user})
     
     # Update user
     user_update = UserUpdate(username=username, bio=bio, pictureUrl=pic, password=password)
