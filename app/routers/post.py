@@ -48,3 +48,20 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
 
     # Redirect the user to the feed page
     return RedirectResponse(url=f"/feed/{post_id}", status_code=303)
+
+@router.get("/post/{post_id}/delete")
+async def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    # Check if user is logged in
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(status_code=400, detail="No access token provided")
+    
+    # Get current user
+    current_user = crud_user.get_current_user(db, token)
+    
+    # Delete post
+    await crud_post.delete_post(db, post_id)
+
+    # Redirect the user to the feed page
+    return RedirectResponse(url="/feed", status_code=303)
