@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from starlette.status import HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_307_TEMPORARY_REDIRECT
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -94,9 +94,9 @@ def get_current_user(db, token: str) -> User | None:
         raise HTTPException(status_code=400, detail="No access token provided")
 
     credentials_exception = HTTPException(
-        status_code=HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+        status_code=HTTP_307_TEMPORARY_REDIRECT,
+        detail="Invalid credentials",
+        headers={"Location": "/login"}
     )
     
     try:        
