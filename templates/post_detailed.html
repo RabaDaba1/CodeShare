@@ -3,6 +3,7 @@
   <head>
     <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="{{ url_for('static', path='/css/prism.css') }}" rel="stylesheet" /> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CodeShare | Feed</title>
@@ -31,7 +32,11 @@
                     <!-- Programming Language Label -->
                     <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{post.lang}}</div>
                     <!-- Code Content -->
-                    <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">{{post.code}}</pre>
+                    <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">
+                        <code class="language-{{post.lang}}">
+                            {{post.code}}
+                        </code>
+                    </pre>
                     <!-- Output Section -->
                     {% if post.output %}
                         <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
@@ -65,5 +70,6 @@
         </div>
     </div>
         <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
+        <script src="{{ url_for('static', path='/js/prism.js') }}"></script> 
   </body>
 </html>
