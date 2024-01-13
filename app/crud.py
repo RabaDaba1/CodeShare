@@ -366,24 +366,85 @@ def get_comment_by_id(db: Session, comment_id: int):
     
     return db.query(Comment).filter(Comment.comment_id == comment_id).first()
   
-def update_user(db: Session, user_id: int, username: str, login: str, description: str, picture_url: str) -> User:
-    """
-    Updates user information.
-    
-    Args:
-        user_id (int): ID of the user.
-        username (str): New username.
-        login (str): New login.
-        picture_url (str): New picture URL.
-        
-    Returns:
-        User: Updated user object.
-        
-    Exceptions:
-        HTTPException: If the user does not exist.
-        HTTPException: If the login is already taken.
-        HTTPException: If the username is too short or too long.
-    """
-    
 def get_similar_users(db: Session, username: str):
     return db.query(User).filter(User.username.ilike(f"%{username}%")).all()
+
+def update_username(db: Session, user_id: int, username: str):
+    """
+    Update a user's username.
+
+    Args:
+        db (Session): SQLAlchemy Session.
+        user_id (int): ID of the user to update.
+        username (str): New username.
+
+    Returns:
+        User: Updated user object.
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        return None
+    user.username = username
+    db.commit()
+    db.refresh(user)
+    return user
+
+def update_bio(db: Session, user_id: int, bio: str):
+    """
+    Update a user's bio.
+
+    Args:
+        db (Session): SQLAlchemy Session.
+        user_id (int): ID of the user to update.
+        bio (str): New bio.
+
+    Returns:
+        User: Updated user object.
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        return None
+    user.bio = bio
+    db.commit()
+    db.refresh(user)
+    return user
+
+def update_picture_url(db: Session, user_id: int, picture_url: str):
+    """
+    Update a user's picture URL.
+
+    Args:
+        db (Session): SQLAlchemy Session.
+        user_id (int): ID of the user to update.
+        picture_url (str): New picture URL.
+
+    Returns:
+        User: Updated user object.
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        return None
+    user.picture_url = picture_url
+    db.commit()
+    db.refresh(user)
+    return user
+
+def update_password(db: Session, user_id: int, password: str):
+    """
+    Update a user's password.
+
+    Args:
+        db (Session): SQLAlchemy Session.
+        user_id (int): ID of the user to update.
+        password (str): New password.
+
+    Returns:
+        User: Updated user object.
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        return None
+    user.hashed_password = pwd_context.hash(password)
+    db.commit()
+    db.refresh(user)
+    return user
