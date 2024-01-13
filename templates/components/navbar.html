@@ -65,7 +65,7 @@
                 data.forEach(function(user) {
                   $('#search-results').append(`
                     <div class="user flex items-center p-2">
-                      <a href="/profile/${user.user_id}" class="flex items-center">
+                      <a href="/user/${user.login}" class="flex items-center">
                         <img class="w-5 h-5 rounded-full mr-2" src="${user.pictureUrl}" alt="${user.username}'s profile picture">
                         <p>${user.username}</p>
                       </a>
