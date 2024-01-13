@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -7,6 +7,8 @@ from models import comment as models_comment
 from models import follower as models_follower
 from models import post_like as models_post_like
 from models import post as models_post
+from crud import get_current_user
+from database import get_db
 from database import engine
 
 # Import the routes
@@ -34,5 +36,11 @@ app.mount("/static", StaticFiles(directory="../static"), name="static")
 
 # Endpoint for the home page
 @app.get("/", response_class=HTMLResponse, tags=["Home page"])
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def home(request: Request, db = Depends(get_db)):
+    # Get current user
+    token = request.cookies.get("access_token")
+    current_user = None
+    if token:
+        current_user = get_current_user(db, token)
+    
+    return templates.TemplateResponse("index.html", {"request": request, "current_user": current_user})
