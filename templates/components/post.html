@@ -1,10 +1,32 @@
 <div id="{{ post.id }}" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
-    <div class="flex items-center">
-        <img class="h-10 w-10 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture">
-        <div class="ml-4">
-        <div class="font-bold text-lg"><a href="/user/{{author.login}}">{{ author.username }}<a></div>
-        <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
+    <div class="flex justify-between">
+        <div class="flex items-center">
+            <a href="/user/{{author.login}}"><img class="h-10 w-10 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture"></a>
+
+            <div class="ml-4">
+                <div class="font-bold text-lg"><a href="/user/{{author.login}}">{{ author.username }}<a></div>
+                <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
+            </div>
         </div>
+
+        {% if post.author_id == current_user.user_id %}
+            <div class="relative inline-block text-left">
+                <a id="settings-icon-{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                </a>
+                <div id="dropdown-menu-{{post.post_id}}" class="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                        <a href="/post/{{post.post_id}}/edit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="/post/{{post.post_id}}/delete" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 hover:text-red-900" role="menuitem">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
     </div>
     <div class="my-4">
         <p class="text-gray-800">{{ post.description }}</p>
@@ -29,3 +51,29 @@
 </div>
 
 <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
+
+{% if post.author_id == current_user.user_id %}
+<script>
+    // Add a click event listener
+    document.getElementById('settings-icon-{{post.post_id}}').addEventListener('click', (event) => {
+        // Prevent the default action
+        event.preventDefault();
+
+        // Get the corresponding dropdown menu
+        const dropdownMenu = document.getElementById('dropdown-menu-{{post.post_id}}');
+
+        // Toggle the visibility of the dropdown menu
+        dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Add a click event listener to the document
+    document.addEventListener('click', (event) => {
+        // If the clicked element is not the settings icon...
+        if (!event.target.closest('#settings-icon-{{post.post_id}}')) {
+            // Hide the dropdown menu
+            const dropdownMenu = document.getElementById('dropdown-menu-{{post.post_id}}');
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+</script>
+{% endif %}
