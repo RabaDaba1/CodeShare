@@ -54,6 +54,30 @@ async def create_post(db: Session, author_id: str, description: str, programming
     
     return new_post
 
+async def delete_post(db: Session, post_id: int):
+    """
+    Deletes a post.
+    
+    Args:
+        post_id (int): ID of the post to be deleted.
+        
+    Exceptions:
+        HTTPException: If the post does not exist.
+    """
+    post = db.query(Post).filter(Post.post_id == post_id).first()
+    
+    if post is None:
+        raise HTTPException(status_code=400, detail="post does not exists")
+    
+    db.delete(post)
+    
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(str(e))  # print the exception details
+        raise HTTPException(status_code=400, detail="Can't delete post")
+
 def get_all_posts(db: Session):
     return db.query(Post).all()
 
