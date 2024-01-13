@@ -50,13 +50,17 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
 
 @router.post("/user/{login}/follow", response_class=HTMLResponse, tags=["User"])
 async def follow_user(request: Request, login: str, db: Session = Depends(get_db)):
+    # Get current user
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login", status_code=303)
+    
+    current_user = get_current_user(db, token)
+    
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't follow a non-existing user"})
-    
-    # Get the current user from the database
-    current_user = get_current_user(db, request.cookies.get("access_token"))
     
     # Follow user
     crud.follow_user(db, current_user.user_id, user.user_id)
@@ -67,14 +71,18 @@ async def follow_user(request: Request, login: str, db: Session = Depends(get_db
 
 @router.post("/user/{login}/unfollow", response_class=HTMLResponse, tags=["User"])
 async def unfollow_user(request: Request, login: str, db: Session = Depends(get_db)):
+     # Get current user
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login", status_code=303)
+    
+    current_user = get_current_user(db, token)
+    
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't unfollow a non-existing user"})
-    
-    # Get the current user from the database
-    current_user = get_current_user(db, request.cookies.get("access_token"))
-    
+
     # Unfollow user
     crud.unfollow_user(db, current_user.user_id, user.user_id)
     
@@ -101,7 +109,6 @@ async def update_user(request: Request, username: str = Form(None), bio: str = F
         return RedirectResponse(url="/login", status_code=303)
     
     current_user = get_current_user(db, token)
-    current_user = get_current_user(db, request.cookies.get("access_token"))
     
     # Check if the user is the same as the current user
     if current_user.user_id != current_user.user_id:

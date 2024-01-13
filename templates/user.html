@@ -27,7 +27,7 @@
                             <a href="#" id="followersLink">{{followers|length}} followers</a> | 
                             <a href="#" id="followingLink">{{followed|length}} following</a>
                         </p>
-                        <p class="mt-2 text-sm">{% if user.bio %}user.bio{%endif%}</p>
+                        <p class="mt-2 text-sm">{% if user.bio %}{{user.bio}}{%endif%}</p>
                         {% if user.login != current_user.login %}
                         <div style="text-align: right;">
                             {% if not follows %}
