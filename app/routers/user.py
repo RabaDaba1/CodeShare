@@ -88,9 +88,9 @@ async def user_settings(request: Request, db: Session = Depends(get_db)):
     if not token:
         return RedirectResponse(url="/login", status_code=303)
     
-    user = get_current_user(db, token)
+    current_user = get_current_user(db, token)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "current_user": current_user})
 
 
 @router.post("/settings", response_class=HTMLResponse, tags=["Settings"])
@@ -100,22 +100,22 @@ async def update_user(request: Request, username: str = Form(None), bio: str = F
     if not token:
         return RedirectResponse(url="/login", status_code=303)
     
-    user = get_current_user(db, token)
+    current_user = get_current_user(db, token)
     current_user = get_current_user(db, request.cookies.get("access_token"))
     
     # Check if the user is the same as the current user
-    if user.user_id != current_user.user_id:
+    if current_user.user_id != current_user.user_id:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update other user's settings"})
     
     # Check if the user exists
-    if user is None:
+    if current_user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"No permission", "detailed_message": "You can't update a non-existing user"})
     
     # Update user
     user_update = UserUpdate(username=username, bio=bio, pictureUrl=pic, password=password)
     
-    crud.update_user(db, user, user_update)
+    crud.update_user(db, current_user, user_update)
     
-    return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
+    return templates.TemplateResponse("user_settings.html", {"request": request, "current_user": current_user})
 
 # TODO: Create a DELETE endpoint for deleting user account at /user/{username}
