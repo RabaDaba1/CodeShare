@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following, get_followers, get_followed
+from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following, get_followers, get_followed, get_user_by_id
 from database import get_db
 from sqlalchemy.orm import Session
 from models.user import User
@@ -28,15 +28,13 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     follows = is_following(db, current_user.user_id, user.user_id)
 
     followers = get_followers(db, user.user_id)
-    followed= get_followed(db, user.user_id)
+    followed = get_followed(db, user.user_id)
 
-    if followed is None:
-        followed = []
-    
-    if followers is None:
-        followers = []
+    followers = [get_user_by_id(db, user.follower_id) for user in followers]
+    followed = [get_user_by_id(db, user.following_id) for user in followed]
 
-    return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, "follows": follows, "followers": len(followers), "followed": len(followed)})
+    return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, 
+                                                    "follows": follows, "followers": followers, "followed": followed})
 
 
 @router.get("/settings", response_class=HTMLResponse, tags=["User"])
