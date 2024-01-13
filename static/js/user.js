@@ -12,6 +12,7 @@ const elements = {
 
 // Function to open modal and show followers
 function showFollowers() {
+    document.getElementById('search-form').style.display = 'none'; // Hide search form when modal is opened
     elements.modal.style.display = 'block';
     elements.followersSection.style.display = 'block';
     elements.followingSection.style.display = 'none';
@@ -20,6 +21,7 @@ function showFollowers() {
 
 // Function to open modal and show following
 function showFollowing() {
+    document.getElementById('search-form').style.display = 'none'; // Hide search form when modal is opened
     elements.modal.style.display = 'block';
     elements.followersSection.style.display = 'none';
     elements.followingSection.style.display = 'block';
@@ -37,6 +39,7 @@ function switchTab(activeTab, inactiveTab) {
 // Function to close modal
 function closeModal() {
     elements.modal.style.display = 'none';
+    document.getElementById('search-form').style.display = 'block'; // Show search form when modal is closed
 }
 
 // Add event listeners to numbers
