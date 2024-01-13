@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import jwt
-from schemas import UserCreate
+from schemas import UserCreate, UserUpdate
 
 # Models
 from models.post_like import PostLike
@@ -24,6 +24,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def create_user(db: Session, user: UserCreate) -> User:
     """
@@ -62,6 +63,7 @@ def create_user(db: Session, user: UserCreate) -> User:
     
     return db_user
 
+
 def authenticate_user(user: User, password: str) -> bool:
     """
     Authenticates a user.
@@ -69,6 +71,7 @@ def authenticate_user(user: User, password: str) -> bool:
     if not pwd_context.verify(password, user.hashedPassword):
         return False
     return True
+
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
     """
@@ -85,6 +88,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     
     return encoded_jwt
+
 
 def get_current_user(db, token: str) -> User | None:
     if not token:
@@ -108,17 +112,20 @@ def get_current_user(db, token: str) -> User | None:
         raise credentials_exception
     return user
 
+
 def get_user_by_id(db: Session, user_id: int) -> User | None:
     """
     Returns a user with the given ID.
     """
     return db.query(User).filter(User.user_id == user_id).first()
 
+
 def get_user_by_login(db: Session, login: str) -> User | None:
     """
     Returns a user with the given login.
     """
     return db.query(User).filter(User.login == login).first()
+
 
 def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     """
@@ -152,7 +159,8 @@ def follow_user(db: Session, follower_id: int, following_id: int) -> Follower:
     db.refresh(follower)
 
     return follower
-    
+
+
 def unfollow_user(db: Session, follower_id: int, following_id: int):
     """
     Unfollows a user.
@@ -181,7 +189,8 @@ def unfollow_user(db: Session, follower_id: int, following_id: int):
     db.commit()
 
     return {"detail": "Unfollowed successfully"}
-    
+
+
 def is_following(db: Session, follower_id: int, following_id: int) -> bool:
     """
     Checks if a user is following another user.
@@ -198,6 +207,7 @@ def is_following(db: Session, follower_id: int, following_id: int) -> bool:
 
     return follower is not None
 
+
 def get_followed(db: Session, user_id: int):
     """
     Returns a list of users that the user follows.
@@ -213,6 +223,7 @@ def get_followed(db: Session, user_id: int):
 
     return followed
 
+
 def get_followers(db: Session, user_id: int):
     """
     Returns a list of users that follow the user.
@@ -227,6 +238,7 @@ def get_followers(db: Session, user_id: int):
     followers = db.query(Follower).filter(Follower.following_id == user_id).all()
 
     return followers
+
 
 def like_post(user_id: int, post_id: int) -> PostLike:
     """
@@ -244,6 +256,7 @@ def like_post(user_id: int, post_id: int) -> PostLike:
     """
     
     # TODO: Implement this function
+
 
 async def create_post(db: Session, author_id: str, description: str, programming_language, code: str, output: str) -> Post:
     """
@@ -293,11 +306,14 @@ async def create_post(db: Session, author_id: str, description: str, programming
     
     return new_post
 
+
 def get_all_posts(db: Session):
     return db.query(Post).all()
 
+
 def get_post_by_id(db:Session, post_id: int):
     return db.query(Post).filter(Post.post_id == post_id).first()
+
 
 def get_user_posts(db: Session, user_id: str):
     author: User
@@ -307,6 +323,7 @@ def get_user_posts(db: Session, user_id: str):
     except Exception as e:
         return []
     
+
 async def create_comment(db: Session, author_id: int, post_id: int, content: str, date: datetime) -> Comment:
     """
     Creates a new comment.
@@ -340,6 +357,7 @@ async def create_comment(db: Session, author_id: int, post_id: int, content: str
     db.refresh(new_comment)
     return new_comment
 
+
 def get_post_comments(db: Session, post_id: int):
     """
     Returns a list of comments of a post.
@@ -352,6 +370,7 @@ def get_post_comments(db: Session, post_id: int):
     """
     
     return db.query(Comment).filter(Comment.post_id == post_id).all()
+
 
 def get_comment_by_id(db: Session, comment_id: int):
     """
@@ -366,24 +385,36 @@ def get_comment_by_id(db: Session, comment_id: int):
     
     return db.query(Comment).filter(Comment.comment_id == comment_id).first()
   
-def update_user(db: Session, user_id: int, username: str, login: str, description: str, picture_url: str) -> User:
+  
+def update_user(db: Session, user: User, user_update: UserUpdate):
     """
-    Updates user information.
+    Updates a user.
     
     Args:
-        user_id (int): ID of the user.
-        username (str): New username.
-        login (str): New login.
-        picture_url (str): New picture URL.
-        
+        user (User): User to be updated.
+        user_update (UserUpdate): New user data.
+    
     Returns:
         User: Updated user object.
         
     Exceptions:
-        HTTPException: If the user does not exist.
-        HTTPException: If the login is already taken.
         HTTPException: If the username is too short or too long.
+        HTTPException: If the bio is too long.
     """
+    user_data = user_update.dict(exclude_unset=True)
+    for key, value in user_data.items():
+        if not value:
+            continue
+        
+        if key == "password" and value is not None:
+            key = "hashedPassword"
+            value = pwd_context.hash(value)
+            
+        setattr(user, key, value)
+        
+    db.commit()
+    db.refresh(user)
+    
     
 def get_similar_users(db: Session, username: str):
     return db.query(User).filter(User.username.ilike(f"%{username}%")).all()
