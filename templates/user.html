@@ -82,8 +82,8 @@
                     {% for follower in followers %}
                         <div class="flex items-center justify-between space-x-4 mb-2">
                             <div class="flex items-center">
-                                <img src="https://preview.redd.it/paaxdxfdx8j11.jpg?auto=webp&s=5bd18d28f47ebcc62e24c76b25821cdb7afd68cf" alt="Following Name" class="w-9 h-9 rounded-full">
-                                <a href="/user/pepperpotts" class="text-sm font-medium text-gray-900">Pepper Potts</a>
+                                <img src="{{follower.pictureUrl}}" alt="{{follower.login}}" class="w-9 h-9 rounded-full">
+                                <a href="/user/{{follower.login}}" class="text-sm font-medium text-gray-900">{{ follower.username }}</a>
                             </div>
                             <button class="text-sm font-medium text-indigo-600">Follow</button>
                         </div>
@@ -96,8 +96,8 @@
                     {% for following in followed %}
                         <div class="flex items-center justify-between space-x-4 mb-2">
                             <div class="flex items-center">
-                                <img src="https://preview.redd.it/paaxdxfdx8j11.jpg?auto=webp&s=5bd18d28f47ebcc62e24c76b25821cdb7afd68cf" alt="Following Name" class="w-9 h-9 rounded-full">
-                                <a href="/user/pepperpotts" class="text-sm font-medium text-gray-900">Pepper Potts</a>
+                                <img src="{{following.pictureUrl}}" alt="{{following.login}}" class="w-9 h-9 rounded-full">
+                                <a href="/user/{{following.login}}" class="text-sm font-medium text-gray-900">{{following.username}}</a>
                             </div>
                             <button class="text-sm font-medium text-indigo-600">Follow</button>
                         </div>
