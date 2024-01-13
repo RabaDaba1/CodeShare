@@ -13,13 +13,14 @@ templates = Jinja2Templates(directory="../templates")
 
 @router.get("/feed", response_class=HTMLResponse, tags=["Feed"])
 async def feed(request: Request, db: Session = Depends(get_db)):
-    
-    # If user is not logged in, redirect to login page
+    # Check if user is logged in
     token = request.cookies.get("access_token")
     if not token:
         return RedirectResponse(url="/login", status_code=303)
 
+    # Get current user
     current_user = get_current_user(db, token)
+    
     followed = get_followed(db, current_user.user_id)
 
     posts = []
@@ -38,6 +39,13 @@ async def feed(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/feed/{post_id}", response_class=HTMLResponse, tags=["Feed"])
 async def post_detailed(request: Request, post_id: int, db: Session = Depends(get_db)):  
+    # Check if user is logged in
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login", status_code=303)
+    
+    # Get current user
+    current_user = get_current_user(db, token)
 
     post = get_post_by_id(db, post_id)
     author = get_user_by_id(db, post.author_id)
@@ -45,18 +53,18 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
     comments.sort(key=lambda comment: comment.date, reverse=True)
     comments = [[get_user_by_id(db, comment.author_id), comment] for comment in comments]
 
-    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments})
+    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments, "current_user": current_user})
 
 
 @router.post("/feed", response_model_exclude_unset=True)
 async def new_post(request: Request, description: str = Form(...), programming_language: str = Form(...), code: str = Form(...), output: str = Form(None), db: Session = Depends(get_db)):
-    # Get the access token from the cookie
+    # Check if user is logged in
     token = request.cookies.get("access_token")
     
     if not token:
         raise HTTPException(status_code=400, detail="No access token provided")
     
-    # Get the current user from the database
+    # Get current user
     current_user = get_current_user(db, token)
     
     # Create the post
@@ -68,16 +76,16 @@ async def new_post(request: Request, description: str = Form(...), programming_l
 
 @router.post("/feed/{post_id}/comment")
 async def new_comment(request: Request, post_id: int, content: str = Form(...), db: Session = Depends(get_db)):
-    # Get the access token from the cookie
+    # Check if user is logged in
     token = request.cookies.get("access_token")
-    
+
     if not token:
         raise HTTPException(status_code=400, detail="No access token provided")
     
-    # Get the current user from the database
+    # Get current user
     current_user = get_current_user(db, token)
     
-    # Create the post
+    # Create post
     await create_comment(db, current_user.user_id, post_id, content, datetime.now())
 
     # Redirect the user to the feed page
