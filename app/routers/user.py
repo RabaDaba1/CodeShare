@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from crud import get_user_posts, get_current_user, get_user_by_login, update_user, is_following, get_followers, get_followed, get_user_by_id
+from crud import get_user_posts, get_current_user, get_user_by_login, is_following, get_followers, get_followed, get_user_by_id
 from database import get_db
 from sqlalchemy.orm import Session
 from models.user import User
