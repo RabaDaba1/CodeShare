@@ -32,14 +32,8 @@
         <p class="text-gray-800">{{ post.description }}</p>
         <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
         <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{ post.lang }}</div>
-        <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono">
-            <code class="language-{{ post.lang }}">
-                {{ post.code }}
-            </code>
-        </pre>
-        {% if post.output %}
-            <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
-        {%endif%}
+        <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono"><code class="language-{{ post.lang }}">{{ post.code }}</code></pre>
+        {% if post.output %}<pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>{%endif%}
         </div>
     </div>
 
