@@ -6,8 +6,9 @@ from fastapi.templating import Jinja2Templates
 # Database
 from schemas import UserCreate
 from sqlalchemy.orm import Session
-from crud import create_user, authenticate_user, create_access_token
 from database import get_db
+
+from crud import crud_user
 
 router = APIRouter()
 
@@ -29,15 +30,15 @@ def register_user(
     user = UserCreate(username=username, login=login, password=password, password_repeat=password_repeat)
     
     # Add the user to the database
-    user = create_user(db, user)
+    user = crud_user.create_user(db, user)
     
     # Check if the user was added successfully
-    authenticated_user = authenticate_user(user, password)
+    authenticated_user = crud_user.authenticate_user(user, password)
     
     # If the user was added successfully, generate a token for them and redirect them to the feed page
     # Otherwise, raise an exception
     if authenticated_user:
-        access_token = create_access_token(data={"sub": user.login})
+        access_token = crud_user.create_access_token(data={"sub": user.login})
 
         response = RedirectResponse(url="/feed", status_code=status.HTTP_302_FOUND)
         response.set_cookie(key="access_token", value=access_token, httponly=True)

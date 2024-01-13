@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException, status
-from crud import authenticate_user, create_access_token, get_user_by_login
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import get_db
+
+from crud import crud_like, crud_post, crud_user
 
 router = APIRouter()
 
@@ -15,10 +16,10 @@ async def login_form(request: Request):
 
 @router.post("/login")
 async def login(request: Request, login: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    user = get_user_by_login(db, login)
+    user = crud_user.get_user_by_login(db, login)
     
     # If the user is not authenticated, raise an exception
-    if not user or not authenticate_user(user, password):
+    if not user or not crud_user.authenticate_user(user, password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect login or password",
@@ -26,7 +27,7 @@ async def login(request: Request, login: str = Form(...), password: str = Form(.
         )
         
     # If the user is authenticated, generate a token for them
-    access_token = create_access_token(data={"sub": user.login})
+    access_token = crud_user.create_access_token(data={"sub": user.login})
     
     # Redirect the user to the feed page and set the access token as a cookie
     response = RedirectResponse(url='/feed', status_code=status.HTTP_303_SEE_OTHER)

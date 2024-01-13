@@ -3,10 +3,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
-from crud import create_post, get_current_user, get_post_comments, get_user_posts, get_followed, get_user_by_id, get_followers, get_post_by_id, create_comment
 from database import get_db
-from datetime import datetime, timedelta
-import crud
+from datetime import datetime
+from crud import crud_user, crud_post, crud_comment, crud_like, crud_follow
 
 router = APIRouter()
 
@@ -20,20 +19,20 @@ async def feed(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login", status_code=303)
 
     # Get current user
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
     
-    followed = get_followed(db, current_user.user_id)
+    followed = crud_follow.get_followed(db, current_user.user_id)
 
     posts = []
 
     for user in followed:
-        posts.extend(get_user_posts(db, user.following_id))
+        posts.extend(crud_post.get_user_posts(db, user.following_id))
 
-    posts.extend(get_user_posts(db, current_user.user_id))
+    posts.extend(crud_post.get_user_posts(db, current_user.user_id))
     
     posts.sort(key=lambda post: post.date, reverse=True)
 
-    posts_with_authors = [[get_user_by_id(db, post.author_id), post] for post in posts]
+    posts_with_authors = [[crud_user.get_user_by_id(db, post.author_id), post] for post in posts]
 
     return templates.TemplateResponse("feed.html", {"request": request, "posts": posts_with_authors, "current_user": current_user})
 
@@ -46,13 +45,13 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
         return RedirectResponse(url="/login", status_code=303)
     
     # Get current user
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
 
-    post = get_post_by_id(db, post_id)
-    author = get_user_by_id(db, post.author_id)
-    comments = get_post_comments(db, post_id)
+    post = crud_post.get_post_by_id(db, post_id)
+    author = crud_user.get_user_by_id(db, post.author_id)
+    comments = crud_comment.get_post_comments(db, post_id)
     comments.sort(key=lambda comment: comment.date, reverse=True)
-    comments = [[get_user_by_id(db, comment.author_id), comment] for comment in comments]
+    comments = [[crud_user.get_user_by_id(db, comment.author_id), comment] for comment in comments]
 
     return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments, "current_user": current_user})
 
@@ -66,10 +65,10 @@ async def new_post(request: Request, description: str = Form(...), programming_l
         raise HTTPException(status_code=400, detail="No access token provided")
     
     # Get current user
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
     
     # Create the post
-    await create_post(db, current_user.user_id, description, programming_language, code, output)
+    await crud_post.create_post(db, current_user.user_id, description, programming_language, code, output)
 
     # Redirect the user to the feed page
     return RedirectResponse(url="/feed", status_code=303)
@@ -84,10 +83,10 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
         raise HTTPException(status_code=400, detail="No access token provided")
     
     # Get current user
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
     
     # Create post
-    await create_comment(db, current_user.user_id, post_id, content, datetime.now())
+    await crud_comment.create_comment(db, current_user.user_id, post_id, content, datetime.now())
 
     # Redirect the user to the feed page
     return RedirectResponse(url=f"/feed/{post_id}", status_code=303)
@@ -101,10 +100,10 @@ async def like_post(request: Request, post_id: int, db: Session = Depends(get_db
         raise HTTPException(status_code=400, detail="No access token provided")
     
     # Get the current user from the database
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
     
     # Like the post
-    await crud.like_post(db, current_user.user_id, post_id)  # Wywołanie funkcji like_post z modułu services
+    await crud_like.like_post(db, current_user.user_id, post_id)  # Wywołanie funkcji like_post z modułu services
 
     # Redirect the user to the feed page
     return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
@@ -118,10 +117,10 @@ async def unlike_post(request: Request, post_id: int, db: Session = Depends(get_
         raise HTTPException(status_code=400, detail="No access token provided")
     
     # Get the current user from the database
-    current_user = get_current_user(db, token)
+    current_user = crud_user.get_current_user(db, token)
     
     # Unlike the post
-    await crud.unlike_post(db, current_user.user_id, post_id)
+    await crud_like.unlike_post(db, current_user.user_id, post_id)
 
     # Redirect the user to the feed page
     return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)

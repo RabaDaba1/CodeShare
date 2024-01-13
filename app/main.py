@@ -7,9 +7,9 @@ from models import comment as models_comment
 from models import follower as models_follower
 from models import post_like as models_post_like
 from models import post as models_post
-from crud import get_current_user
 from database import get_db
 from database import engine
+from crud import crud_user
 
 # Import the routes
 from routers import login, register, feed, user, search
@@ -41,6 +41,6 @@ async def home(request: Request, db = Depends(get_db)):
     token = request.cookies.get("access_token")
     current_user = None
     if token:
-        current_user = get_current_user(db, token)
+        current_user = crud_user.get_current_user(db, token)
     
     return templates.TemplateResponse("index.html", {"request": request, "current_user": current_user})
