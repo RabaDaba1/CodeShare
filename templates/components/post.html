@@ -32,8 +32,10 @@
         <p class="text-gray-800">{{ post.description }}</p>
         <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
         <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{ post.lang }}</div>
-        <pre class="rounded mt-2 p-4 bg-neutral-800 font-mono"><code class="language-{{ post.lang }}">{{ post.code }}</code></pre>
-        {% if post.output %}<pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>{%endif%}
+        <pre class="custom-scrollbar rounded mt-2 p-4 bg-neutral-800 font-mono"><code class="language-{{ post.lang }}">{{ post.code }}</code></pre>
+        {% if post.output %}
+            <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
+        {%endif%}
         </div>
     </div>
 
@@ -51,27 +53,42 @@
 <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
 
 {% if post.author_id == current_user.user_id %}
-<script>
-    // Add a click event listener
-    document.getElementById('settings-icon-{{post.post_id}}').addEventListener('click', (event) => {
-        // Prevent the default action
-        event.preventDefault();
+    <script>
+        // Add a click event listener
+        document.getElementById('settings-icon-{{post.post_id}}').addEventListener('click', (event) => {
+            // Prevent the default action
+            event.preventDefault();
 
-        // Get the corresponding dropdown menu
-        const dropdownMenu = document.getElementById('dropdown-menu-{{post.post_id}}');
-
-        // Toggle the visibility of the dropdown menu
-        dropdownMenu.classList.toggle('hidden');
-    });
-
-    // Add a click event listener to the document
-    document.addEventListener('click', (event) => {
-        // If the clicked element is not the settings icon...
-        if (!event.target.closest('#settings-icon-{{post.post_id}}')) {
-            // Hide the dropdown menu
+            // Get the corresponding dropdown menu
             const dropdownMenu = document.getElementById('dropdown-menu-{{post.post_id}}');
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-</script>
+
+            // Toggle the visibility of the dropdown menu
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        // Add a click event listener to the document
+        document.addEventListener('click', (event) => {
+            // If the clicked element is not the settings icon...
+            if (!event.target.closest('#settings-icon-{{post.post_id}}')) {
+                // Hide the dropdown menu
+                const dropdownMenu = document.getElementById('dropdown-menu-{{post.post_id}}');
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+    </script>
 {% endif %}
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 0.5em;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background-color: #404040;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #606060;
+        border-radius: 0.15em;
+    }
+</style>
