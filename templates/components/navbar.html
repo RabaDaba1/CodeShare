@@ -9,7 +9,7 @@
         {% if 'access_token' in request.cookies and request.path not in ['/', '/login', '/register', '/settings'] %}
         <div class="flex lg:flex-1 lg:justify-center ">
             <div class="relative">
-                <form id="search-form" class="flex items-center px-1.5 rounded-l border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <form id="search-form" class="flex items-center px-1.5 rounded-t rounded-b border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <input id="search-input" type="text" name="username" placeholder="Search users" required class="border-none focus:outline-none focus:ring-0">
                     <button type="submit" class="px-3 py-0.75 rounded-r-md text-gray-300">
                         <i class="fas fa-search"></i>
@@ -78,19 +78,19 @@
                           $('#search-results').addClass('border-b border-l border-r border-gray-300');
                   
                           // Change form border
-                          $('#search-form').removeClass('rounded-l').addClass('rounded-t');
+                          $('#search-form').removeClass('rounded-b');
                       } else {
                           // Remove border from search results
                           $('#search-results').removeClass('border-b border-l border-r border-gray-300');
                   
                           // Change form border back
-                          $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+                          $('#search-form').addClass('rounded-b');
                       }
                   }
               });
           } else {
               $('#search-results').empty().removeClass('border-b border-l border-r border-gray-300');
-              $('#search-form').removeClass('rounded-t').addClass('rounded-l');
+              $('#search-form').addClass('rounded-b');
           }
       });
     

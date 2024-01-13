@@ -22,7 +22,7 @@
                             {% endif %}
                         </div>
                         <img class="mx-auto rounded-full p-4" src="{{ user.pictureUrl }}" alt="{{ user.login }}'s profile picture">
-                        <h2 class="text-xl font-bold mt-4">{{ user.login }}</h2>
+                        <h2 class="text-xl font-bold mt-4">{{ user.username }}</h2>
                         <p class="mt-2 text-sm text-gray-500">
                             <a href="#" id="followersLink">{{followers|length}} followers</a> | 
                             <a href="#" id="followingLink">{{followed|length}} following</a>
@@ -32,19 +32,11 @@
                         <div style="text-align: right;">
                             {% if not follows %}
                             <form action="/user/{{ user.login }}/follow" method="post">
-                                <input 
-                                    type="submit" 
-                                    value="Follow" 
-                                    class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
+                                <input type="submit" value="Follow" class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             </form>
                             {% else %}
                             <form action="/user/{{ user.login }}/unfollow" method="post">
-                                <input 
-                                    type="submit" 
-                                    value="Unfollow" 
-                                    class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300"
-                                >
+                                <input type="submit" value="Unfollow" class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300">
                             </form>
                             {% endif %}
                         </div>
@@ -83,9 +75,19 @@
                         <div class="flex items-center justify-between space-x-4 mb-2">
                             <div class="flex items-center">
                                 <img src="{{follower.pictureUrl}}" alt="{{follower.login}}" class="w-9 h-9 rounded-full">
-                                <a href="/user/{{follower.login}}" class="text-sm font-medium text-gray-900">{{ follower.username }}</a>
+                                <a href="/user/{{follower.login}}" class="text-sm font-medium text-gray-900 ml-3">{{ follower.username }}</a>
                             </div>
-                            <button class="text-sm font-medium text-indigo-600">Follow</button>
+                            {% if current_user.login == follower.login %}
+                                <!-- No action for current user -->
+                            {% elif follower in users_followed_by_current_user %}
+                                <form action="/user/{{ follower.login }}/unfollow" method="post">
+                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600">
+                                </form>
+                            {% else %}
+                                <form action="/user/{{ follower.login }}/follow" method="post">
+                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600">
+                                </form>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
@@ -97,9 +99,19 @@
                         <div class="flex items-center justify-between space-x-4 mb-2">
                             <div class="flex items-center">
                                 <img src="{{following.pictureUrl}}" alt="{{following.login}}" class="w-9 h-9 rounded-full">
-                                <a href="/user/{{following.login}}" class="text-sm font-medium text-gray-900">{{following.username}}</a>
+                                <a href="/user/{{following.login}}" class="text-sm font-medium text-gray-900 ml-3">{{following.username}}</a>
                             </div>
-                            <button class="text-sm font-medium text-indigo-600">Follow</button>
+                            {% if current_user.login == following.login %}
+                                <!-- No action for current user -->
+                            {% elif following not in users_followed_by_current_user %}
+                                <form action="/user/{{ following.login }}/follow" method="post">
+                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600">
+                                </form>
+                            {% else %}
+                                <form action="/user/{{ following.login }}/unfollow" method="post">
+                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600">
+                                </form>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

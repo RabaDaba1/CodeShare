@@ -22,19 +22,28 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for."})
     
+    # Get the user's posts
     posts = [[user, post] for post in get_user_posts(db, user.user_id)]
     posts.sort(key=lambda post: post[1].date, reverse=True)
+    
+    # Get the current user
     current_user = get_current_user(db, token)
+    
+    # Check if the current user is following the user
     follows = is_following(db, current_user.user_id, user.user_id)
 
+    # Get the user's followers and followed users
     followers = get_followers(db, user.user_id)
     followed = get_followed(db, user.user_id)
 
     followers = [get_user_by_id(db, user.follower_id) for user in followers]
     followed = [get_user_by_id(db, user.following_id) for user in followed]
+    
+    # Get the users followed by the current user
+    users_followed_by_current_user = [get_user_by_id(db, user.following_id) for user in get_followed(db, current_user.user_id)]
 
     return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, 
-                                                    "follows": follows, "followers": followers, "followed": followed})
+                                                    "follows": follows, "followers": followers, "followed": followed, "users_followed_by_current_user": users_followed_by_current_user})
 
 
 @router.get("/settings", response_class=HTMLResponse, tags=["User"])
@@ -46,6 +55,7 @@ async def user_settings(request: Request, db: Session = Depends(get_db)):
     user = get_current_user(db, token)
     
     return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
+
 
 # TODO: Create a PUT endpoint for updating user information at /user/{username}/settings
 @router.put("/settings", response_class=HTMLResponse, tags=["User"])
@@ -70,9 +80,8 @@ async def update_user(request: Request, db: Session = Depends(get_db)):
     update_user(db, current_user.user_id, user.user_id)
     
     return templates.TemplateResponse("user_settings.html", {"request": request, "user": user})
-# TODO: Create a DELETE endpoint for deleting user account at /user/{username}
 
-# TODO: Create a POST endpoint for starting to follow a user at /user/{username}/follow
+
 @router.post("/user/{login}/follow", response_class=HTMLResponse, tags=["User"])
 async def follow_user(request: Request, login: str, db: Session = Depends(get_db)):
     # Check if the user exists
@@ -86,9 +95,9 @@ async def follow_user(request: Request, login: str, db: Session = Depends(get_db
     # Follow user
     crud.follow_user(db, current_user.user_id, user.user_id)
     
-    return RedirectResponse(url=f"/user/{login}", status_code=303)
+    return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
 
-# TODO: Create a DELETE endpoint for stopping to follow a user at /user/{username}/follow
+
 @router.post("/user/{login}/unfollow", response_class=HTMLResponse, tags=["User"])
 async def unfollow_user(request: Request, login: str, db: Session = Depends(get_db)):
     # Check if the user exists
@@ -102,4 +111,6 @@ async def unfollow_user(request: Request, login: str, db: Session = Depends(get_
     # Unfollow user
     crud.unfollow_user(db, current_user.user_id, user.user_id)
     
-    return RedirectResponse(url=f"/user/{login}", status_code=303)
+    return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
+
+# TODO: Create a DELETE endpoint for deleting user account at /user/{username}
