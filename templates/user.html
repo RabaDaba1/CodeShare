@@ -31,13 +31,13 @@
                         {% if user.login != current_user.login %}
                         <div style="text-align: right;">
                             {% if not follows %}
-                            <form action="/user/{{ user.login }}/follow" method="post">
-                                <input type="submit" value="Follow" class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            </form>
+                                <form action="/user/{{ user.login }}/follow" method="post">
+                                    <input type="submit" value="Follow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                </form>
                             {% else %}
-                            <form action="/user/{{ user.login }}/unfollow" method="post">
-                                <input type="submit" value="Unfollow" class="ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300">
-                            </form>
+                                <form action="/user/{{ user.login }}/unfollow" method="post">
+                                    <input type="submit" value="Unfollow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300">
+                                </form>
                             {% endif %}
                         </div>
                         {% endif %}
