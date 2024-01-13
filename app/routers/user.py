@@ -22,7 +22,7 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     # Check if the user exists
     user = get_user_by_login(db, login)
     if user is None:
-        return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for."})
+        return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for.", "current_user": get_current_user(db, token)})
     
     # Get the user's posts
     posts = [[user, post] for post in get_user_posts(db, user.user_id)]
