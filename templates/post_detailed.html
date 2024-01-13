@@ -14,7 +14,9 @@
 
     <!-- TODO: Change data to that passed to the template -->
     <div class="container max-w-md md:max-w-2xl mx-auto mt-24 px-4">
-        <div id="1" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
+        <a href="/feed" class="ml-3 mb-3 inline-block text-s"><i class="fas fa-arrow-left"></i> Back</a>
+        
+        <div id="{{post.post_id}}" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
             <!-- Post Header -->
             <div class="flex items-center">
                 <img class="h-11 w-11 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture">
