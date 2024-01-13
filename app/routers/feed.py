@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from crud import create_post, get_current_user, get_post_comments, get_user_posts, get_followed, get_user_by_id, get_followers, get_post_by_id, create_comment
 from database import get_db
 from datetime import datetime, timedelta
+import crud
 
 router = APIRouter()
 
@@ -91,6 +92,39 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
     # Redirect the user to the feed page
     return RedirectResponse(url=f"/feed/{post_id}", status_code=303)
 
+@router.post("/{post_id}/like")
+async def like_post(request: Request, post_id: int, db: Session = Depends(get_db)):  # Zmieniono nazwę funkcji
+    # Get the access token from the cookie
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        raise HTTPException(status_code=400, detail="No access token provided")
+    
+    # Get the current user from the database
+    current_user = get_current_user(db, token)
+    
+    # Like the post
+    await crud.like_post(db, current_user.user_id, post_id)  # Wywołanie funkcji like_post z modułu services
+
+    # Redirect the user to the feed page
+    return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
+
+@router.post("/{post_id}/unlike")
+async def unlike_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    # Get the access token from the cookie
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        raise HTTPException(status_code=400, detail="No access token provided")
+    
+    # Get the current user from the database
+    current_user = get_current_user(db, token)
+    
+    # Unlike the post
+    await crud.unlike_post(db, current_user.user_id, post_id)
+
+    # Redirect the user to the feed page
+    return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
 
 # TODO: Create a PUT endpoint for the post edition form at /feed/{post_id}
 

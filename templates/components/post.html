@@ -18,7 +18,9 @@
     </div>
 
     <div class="flex items-center justify-start space-x-4">
-        <button class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
+        <form action="/{{post.post_id}}/like" method="post">
+            <button type="submit" class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
+        </form>
         <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
             <i class="far fa-comment"></i> Comment
         </a>
