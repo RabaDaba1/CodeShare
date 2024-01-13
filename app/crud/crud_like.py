@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 # Models
 from models.post_like import PostLike
@@ -54,6 +55,11 @@ async def unlike_post(db: Session, user_id: int, post_id: int):
         raise HTTPException(status_code=400, detail="User did not like the post")
 
     db.delete(post_like)
-    db.commit()
+    
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="User already disliked the post")
 
     return {"detail": "Unliked successfully"}

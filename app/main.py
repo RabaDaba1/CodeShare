@@ -12,7 +12,7 @@ from database import engine
 from crud import crud_user
 
 # Import the routes
-from routers import login, register, feed, user, search
+from routers import feed, follow, like, login, post, register, search, settings, user
 
 # Create an app object
 app = FastAPI()
@@ -24,12 +24,16 @@ models_post.Base.metadata.create_all(bind=engine)
 models_post_like.Base.metadata.create_all(bind=engine)
 
 # Include the routers
-app.include_router(login.router)
-app.include_router(register.router)
 app.include_router(feed.router)
-app.include_router(user.router)
+app.include_router(follow.router)
+app.include_router(like.router)
+app.include_router(login.router)
+app.include_router(post.router)
+app.include_router(register.router)
 app.include_router(search.router)
-
+app.include_router(settings.router)
+app.include_router(user.router)
+    
 # Mount the templates and static folders
 templates = Jinja2Templates(directory="../templates")
 app.mount("/static", StaticFiles(directory="../static"), name="static")

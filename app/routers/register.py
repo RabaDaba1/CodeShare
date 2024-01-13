@@ -1,18 +1,15 @@
-# FastAPI
 from fastapi import APIRouter, HTTPException, Request, Depends, status, Form, Cookie
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-
-# Database
 from schemas import UserCreate
 from sqlalchemy.orm import Session
 from database import get_db
-
 from crud import crud_user
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="../templates")
+
 
 @router.get("/register", response_class=HTMLResponse, tags=["Register"])
 async def register_form(request: Request ):

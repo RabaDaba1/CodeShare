@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from crud import crud_user
 from database import get_db
+from crud import crud_user
 
 router = APIRouter()
+
 
 @router.get("/search/")
 def read_users(username: str = '', db: Session = Depends(get_db)):    
