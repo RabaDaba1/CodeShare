@@ -64,7 +64,7 @@
         </form>
       </div>
 
-      {% for (author, post) in posts %}
+      {% for (author, post, is_liked) in posts %}
         {% include 'components/post.html' %}
       {% endfor %}
 

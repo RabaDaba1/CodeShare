@@ -11,7 +11,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
 
 
-@router.post("/{post_id}/like")
+@router.get("/{post_id}/like")
 async def like_post(request: Request, post_id: int, db: Session = Depends(get_db)):  # Zmieniono nazwę funkcji
     # Get the access token from the cookie
     token = request.cookies.get("access_token")
@@ -28,7 +28,7 @@ async def like_post(request: Request, post_id: int, db: Session = Depends(get_db
     # Redirect the user to the feed page
     return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
 
-@router.post("/{post_id}/unlike")
+@router.get("/{post_id}/unlike")
 async def unlike_post(request: Request, post_id: int, db: Session = Depends(get_db)):
     # Get the access token from the cookie
     token = request.cookies.get("access_token")
@@ -44,3 +44,4 @@ async def unlike_post(request: Request, post_id: int, db: Session = Depends(get_
 
     # Redirect the user to the feed page
     return RedirectResponse(url=request.headers.get("Referer", "/"), status_code=303)
+

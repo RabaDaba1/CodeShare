@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-span-3">
                     <!-- POST -->
-                    {% for (author, post) in posts %}
+                    {% for (author, post, is_liked) in posts %}
                         {% include 'components/post.html' %}
                     {% endfor %}
                 </div>
