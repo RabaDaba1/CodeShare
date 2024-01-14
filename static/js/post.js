@@ -66,8 +66,10 @@ function replaceWithTextarea(element) {
 // Function to replace textarea with original element
 function replaceTextareaWithOriginal(textarea, newValue, originalTag) {
     if (textarea) {
+        console.log(textarea);
         const element = document.createElement(originalTag);
         element.textContent = newValue;
+        element.className = textarea.className;
         textarea.parentNode.replaceChild(element, textarea);
     } else {
         console.error('Textarea does not exist');
