@@ -94,11 +94,12 @@ def get_current_user(db, token: str) -> User | None:
         login = payload.get("sub")
         if login is None:
             raise credentials_exception
-        user = get_user_by_login(db, login=login)
+        user = get_user_by_login(db, login)
         if user is None:
             raise credentials_exception
     except jwt.PyJWTError:
         raise credentials_exception
+    
     return user
 
 def get_user_by_id(db: Session, user_id: int) -> User | None:

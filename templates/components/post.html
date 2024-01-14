@@ -4,7 +4,7 @@
             <a href="/user/{{author.login}}"><img class="h-10 w-10 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture"></a>
 
             <div class="ml-4">
-                <div class="font-bold text-lg"><a href="/user/{{author.login}}">{{ author.username }}<a></div>
+                <div class="font-bold text-lg"><a href="/user/{{author.login}}">{{ author.username }}</a></div>
                 <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
             </div>
         </div>
@@ -45,13 +45,11 @@
     </div>
 
     <div class="flex items-center justify-start space-x-4">
-        <form action="/{{post.post_id}}/like" method="post">
-            {% if is_liked %}
-                <a href="/{{post.post_id}}/unlike" class="like text-gray-600 hover:text-indigo-600"><i class="fas fa-heart"></i> {{like_count}}</a>
-            {% else %}
-                <a href="/{{post.post_id}}/like" class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
-            {% endif %}
-        </form>
+        {% if is_liked %}
+            <a href="/{{post.post_id}}/unlike" class="like text-gray-600 hover:text-indigo-600"><i class="fas fa-heart"></i> {{like_count}}</a>
+        {% else %}
+            <a href="/{{post.post_id}}/like" class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
+        {% endif %}
         <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
             <i class="far fa-comment"></i> Comment
         </a>

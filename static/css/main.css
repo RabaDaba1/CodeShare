@@ -869,6 +869,10 @@ select {
   margin-left: 1rem;
 }
 
+.ml-\[1\.5\] {
+  margin-left: 1.5;
+}
+
 .ml-auto {
   margin-left: auto;
 }
@@ -907,6 +911,14 @@ select {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.ml-1 {
+  margin-left: 0.25rem;
+}
+
+.ml-1\.5 {
+  margin-left: 0.375rem;
 }
 
 .block {
@@ -959,18 +971,6 @@ select {
 
 .h-full {
   height: 100%;
-}
-
-.max-h-10 {
-  max-height: 2.5rem;
-}
-
-.max-h-20 {
-  max-height: 5rem;
-}
-
-.max-h-40 {
-  max-height: 10rem;
 }
 
 .max-h-96 {
@@ -1049,10 +1049,6 @@ select {
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.cursor-grab {
-  cursor: grab;
 }
 
 .appearance-none {
@@ -1405,6 +1401,10 @@ select {
 
 .font-bold {
   font-weight: 700;
+}
+
+.font-light {
+  font-weight: 300;
 }
 
 .font-medium {

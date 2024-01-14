@@ -43,9 +43,8 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
 async def new_comment(request: Request, post_id: int, content: str = Form(...), db: Session = Depends(get_db)):
     # Check if user is logged in
     token = request.cookies.get("access_token")
-
     if not token:
-        raise HTTPException(status_code=400, detail="No access token provided")
+        raise RedirectResponse(url="/login", status_code=303)
     
     # Get current user
     current_user = crud_user.get_current_user(db, token)
@@ -61,9 +60,8 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
 async def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
     # Check if user is logged in
     token = request.cookies.get("access_token")
-
     if not token:
-        raise HTTPException(status_code=400, detail="No access token provided")
+        raise RedirectResponse(url="/login", status_code=303)
     
     # Get current user
     current_user = crud_user.get_current_user(db, token)
