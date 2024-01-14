@@ -79,3 +79,16 @@ def is_liked (db: Session, user_id: int, post_id: int) -> bool:
     post_like = db.query(PostLike).filter(PostLike.user_id == user_id, PostLike.post_id == post_id).first()
 
     return post_like is not None
+
+def get_like_count(db: Session, post_id: int) -> int:
+    """
+    Counts the number of likes of a post.
+    
+    Args:
+        post_id (int): ID of the post.
+        
+    Returns:
+        int: Number of likes of the post.
+    """
+
+    return db.query(PostLike).filter(PostLike.post_id == post_id).count()

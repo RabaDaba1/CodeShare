@@ -32,7 +32,10 @@ async def feed(request: Request, db: Session = Depends(get_db)):
     
     posts.sort(key=lambda post: post.date, reverse=True)
 
-    posts = [[crud_user.get_user_by_id(db, post.author_id), post, crud_like.is_liked(db, current_user.user_id, post.post_id)] for post in posts]
+    posts = [[crud_user.get_user_by_id(db, post.author_id), 
+              post, 
+              crud_like.is_liked(db, current_user.user_id, post.post_id),
+              crud_like.get_like_count(db, post.post_id)] for post in posts]
 
     return templates.TemplateResponse("feed.html", {"request": request, "posts": posts, "current_user": current_user})
 

@@ -29,8 +29,11 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
     comments.sort(key=lambda comment: comment.date, reverse=True)
     comments = [[crud_user.get_user_by_id(db, comment.author_id), comment] for comment in comments]
     is_liked = crud_like.is_liked(db, current_user.user_id, post_id)
+    like_count = crud_like.get_like_count(db, post_id)
 
-    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments, "current_user": current_user, "is_liked": is_liked})
+    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, 
+                                                             "comments": comments, "current_user": current_user, 
+                                                             "is_liked": is_liked, "like_count": like_count})
 
 
 @router.post("/feed/{post_id}/comment")

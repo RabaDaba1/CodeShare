@@ -26,7 +26,7 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     current_user = crud_user.get_current_user(db, token)
 
     # Get the user's posts
-    posts = [[user, post, crud_like.is_liked(db, current_user.user_id, post.post_id)] for post in crud_post.get_user_posts(db, user.user_id)]
+    posts = [[user, post, crud_like.is_liked(db, current_user.user_id, post.post_id), crud_like.get_like_count(db, post.post_id)] for post in crud_post.get_user_posts(db, user.user_id)]
     posts.sort(key=lambda post: post[1].date, reverse=True)
     
     # Check if the current user is following the user
