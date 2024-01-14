@@ -85,7 +85,7 @@
                 <div class="comment bg-gray-100 rounded-lg p-3 mb-2 flex items-start">
                     <img class="h-9 w-9 rounded-full object-cover mr-2" src="{{comment_author.pictureUrl}}" alt="Profile Picture">
                     <div>
-                        <div class="font-bold text-sm">{{comment_author.username}}</div>
+                        <div class="font-bold">{{comment_author.username}}<span class="text-gray-500 text-xs ml-2 date-posted">{{comment.date}}</span></div>
                         <p class="text-gray-800 text-sm">{{comment.content}}</p>
                     </div>
                 </div>
