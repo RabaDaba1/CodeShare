@@ -82,6 +82,6 @@ async def edit_post(request: Request, post_id: int, db: Session = Depends(get_db
     # Get current user
     current_user = crud_user.get_current_user(db, token)
     
-    # post = crud_post.get_post_by_id(db, post_id)
+    post = crud_post.get_post_by_id(db, post_id)
 
-    # return {"post": post, "current_user": current_user}
+    return {"post": post, "current_user": current_user}
