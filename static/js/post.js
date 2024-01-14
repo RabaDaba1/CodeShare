@@ -107,6 +107,11 @@ function handleSaveButtonClick() {
         replaceTextareaWithOriginal(descriptionElement, newDescription, 'p');
         replaceTextareaWithOriginal(codeElement, newCode, 'pre');
         replaceTextareaWithOriginal(outputElement, newOutput, 'pre');
+
+        const settingsIcon = postContainer.querySelector('.settings-icon');
+        const saveButton = postContainer.querySelector('.save-button');
+        settingsIcon.classList.remove('hidden');
+        saveButton.classList.add('hidden');
     })
     .catch(error => console.error('Error:', error));
 }
