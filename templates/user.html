@@ -33,11 +33,11 @@
                         <div style="text-align: right;">
                             {% if not follows %}
                                 <form action="/user/{{ user.login }}/follow" method="post">
-                                    <input type="submit" value="Follow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <input type="submit" value="Follow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
                                 </form>
                             {% else %}
                                 <form action="/user/{{ user.login }}/unfollow" method="post">
-                                    <input type="submit" value="Unfollow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300">
+                                    <input type="submit" value="Unfollow" class="mt-1 ml-auto px-2 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-stone-400 hover:bg-stone-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-300 cursor-pointer">
                                 </form>
                             {% endif %}
                         </div>
@@ -82,11 +82,11 @@
                                 <!-- No action for current user -->
                             {% elif follower in users_followed_by_current_user %}
                                 <form action="/user/{{ follower.login }}/unfollow" method="post">
-                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600">
+                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600 cursor-pointer">
                                 </form>
                             {% else %}
                                 <form action="/user/{{ follower.login }}/follow" method="post">
-                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600">
+                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600 cursor-pointer">
                                 </form>
                             {% endif %}
                         </div>
@@ -106,11 +106,11 @@
                                 <!-- No action for current user -->
                             {% elif following not in users_followed_by_current_user %}
                                 <form action="/user/{{ following.login }}/follow" method="post">
-                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600">
+                                    <input type="submit" value="Follow" class="text-sm font-medium text-indigo-600 cursor-pointer">
                                 </form>
                             {% else %}
                                 <form action="/user/{{ following.login }}/unfollow" method="post">
-                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600">
+                                    <input type="submit" value="Unfollow" class="text-sm font-medium text-indigo-600 cursor-pointer">
                                 </form>
                             {% endif %}
                         </div>
@@ -128,8 +128,13 @@
                 top: 0.8rem;
                 right: 0.8rem;
             }
+
+            .clickable {
+                cursor: pointer;
+            }
         </style>
         <script src="{{ url_for('static', path='/js/user.js') }}"></script>
         <script src="{{ url_for('static', path='/js/prism.js') }}"></script> 
+        <script src="{{ url_for('static', path='/js/post.js') }}"></script>
     </body>
 </html>
