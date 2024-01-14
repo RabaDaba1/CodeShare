@@ -26,9 +26,11 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
 
     post = crud_post.get_post_by_id(db, post_id)
     author = crud_user.get_user_by_id(db, post.author_id)
+    
     comments = crud_comment.get_post_comments(db, post_id)
     comments.sort(key=lambda comment: comment.date, reverse=True)
     comments = [[crud_user.get_user_by_id(db, comment.author_id), comment] for comment in comments]
+    
     is_liked = crud_like.is_liked(db, current_user.user_id, post_id)
     like_count = crud_like.get_like_count(db, post_id)
 
@@ -65,15 +67,20 @@ async def delete_post(request: Request, post_id: int, db: Session = Depends(get_
     
     # Get current user
     current_user = crud_user.get_current_user(db, token)
+    post = crud_post.get_post_by_id(db, post_id)
+    
+    # Check if user is the author of the post
+    if current_user.user_id != post.author_id:
+        raise HTTPException(status_code=400, detail="You can't delete not your post.")
     
     # Delete post
     await crud_post.delete_post(db, post_id)
 
-    # Redirect the user to the feed page
-    return RedirectResponse(url="/feed", status_code=303)
+    # Redirect the user to the previous page
+    return RedirectResponse(url=request.headers["Referer"], status_code=303)
 
 
-@router.post("/post/{post_id}/edit", response_class=JSONResponse, tags=["Feed"])
+@router.post("/post/{post_id}/edit", response_class=HTMLResponse, tags=["Feed"])
 async def edit_post(request: Request, post_id: int, post_edit: PostEdit = Body(...), db: Session = Depends(get_db)):
     # Check if user is logged in
     token = request.cookies.get("access_token")
@@ -88,6 +95,8 @@ async def edit_post(request: Request, post_id: int, post_edit: PostEdit = Body(.
     if current_user.user_id != post_author:
         raise HTTPException(status_code=400, detail="You can't edit not your post.")
     
+    # Edit post
     crud_post.edit_post(db, post_id, post_edit)
 
-    return JSONResponse(content={"message": "Post edited successfully"})
+    # Redirect the user to previous page
+    return RedirectResponse(url=request.headers["Referer"], status_code=303)
