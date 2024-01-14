@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from crud import crud_user, crud_post, crud_follow
+from crud import crud_user, crud_post, crud_follow, crud_like
 
 router = APIRouter()
 
@@ -32,9 +32,12 @@ async def feed(request: Request, db: Session = Depends(get_db)):
     
     posts.sort(key=lambda post: post.date, reverse=True)
 
-    posts_with_authors = [[crud_user.get_user_by_id(db, post.author_id), post] for post in posts]
+    posts = [[crud_user.get_user_by_id(db, post.author_id), 
+              post, 
+              crud_like.is_liked(db, current_user.user_id, post.post_id),
+              crud_like.get_like_count(db, post.post_id)] for post in posts]
 
-    return templates.TemplateResponse("feed.html", {"request": request, "posts": posts_with_authors, "current_user": current_user})
+    return templates.TemplateResponse("feed.html", {"request": request, "posts": posts, "current_user": current_user})
 
 
 @router.post("/feed", response_model_exclude_unset=True)

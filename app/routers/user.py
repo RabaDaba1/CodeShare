@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database import get_db
 
-from crud import crud_user, crud_post, crud_follow
+from crud import crud_user, crud_post, crud_follow, crud_like
 
 router = APIRouter()
 templates = Jinja2Templates(directory="../templates")
@@ -22,12 +22,12 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
     if user is None:
         return templates.TemplateResponse("error.html", {"request": request, "message": f"User {login} not found", "detailed_message": "Sorry, we couldn't find the user you were looking for.", "current_user": crud_user.get_current_user(db, token)})
     
-    # Get the user's posts
-    posts = [[user, post] for post in crud_post.get_user_posts(db, user.user_id)]
-    posts.sort(key=lambda post: post[1].date, reverse=True)
-    
     # Get the current user
     current_user = crud_user.get_current_user(db, token)
+
+    # Get the user's posts
+    posts = [[user, post, crud_like.is_liked(db, current_user.user_id, post.post_id), crud_like.get_like_count(db, post.post_id)] for post in crud_post.get_user_posts(db, user.user_id)]
+    posts.sort(key=lambda post: post[1].date, reverse=True)
     
     # Check if the current user is following the user
     follows = crud_follow.is_following(db, current_user.user_id, user.user_id)

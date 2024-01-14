@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 from database import get_db
 
-from crud import crud_user, crud_post, crud_comment
+from crud import crud_user, crud_post, crud_comment, crud_like
 
 router = APIRouter()
 
@@ -28,8 +28,12 @@ async def post_detailed(request: Request, post_id: int, db: Session = Depends(ge
     comments = crud_comment.get_post_comments(db, post_id)
     comments.sort(key=lambda comment: comment.date, reverse=True)
     comments = [[crud_user.get_user_by_id(db, comment.author_id), comment] for comment in comments]
+    is_liked = crud_like.is_liked(db, current_user.user_id, post_id)
+    like_count = crud_like.get_like_count(db, post_id)
 
-    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, "comments": comments, "current_user": current_user})
+    return templates.TemplateResponse("post_detailed.html", {"request": request, "post": post, "author": author, 
+                                                             "comments": comments, "current_user": current_user, 
+                                                             "is_liked": is_liked, "like_count": like_count})
 
 
 @router.post("/feed/{post_id}/comment")

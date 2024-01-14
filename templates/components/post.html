@@ -46,14 +46,45 @@
 
     <div class="flex items-center justify-start space-x-4">
         <form action="/{{post.post_id}}/like" method="post">
-            <button type="submit" class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> Like</button>
+            {% if is_liked %}
+                <a href="/{{post.post_id}}/unlike" class="like text-gray-600 hover:text-indigo-600"><i class="fas fa-heart"></i> {{like_count}}</a>
+            {% else %}
+                <a href="/{{post.post_id}}/like" class="like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
+            {% endif %}
         </form>
         <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
             <i class="far fa-comment"></i> Comment
         </a>
-        <button class="text-gray-600 hover:text-indigo-600"><i class="far fa-share-square"></i> Share</button>
+        <button class="share-button text-gray-600 hover:text-indigo-600" data-post-link="http://127.0.0.1:8000/feed/{{ post.post_id }}"><i class="far fa-share-square"></i> Share</button>
+        <div id="tooltip" style="position: absolute; display: none; background: #404040; color: #FFFFFF; padding: 5px; border-radius: 5px;">Copied!</div>
     </div>
 </div>
+
+<script>
+document.querySelectorAll('.share-button').forEach(button => {
+  button.addEventListener('click', function(event) {
+    var postLink = this.getAttribute('data-post-link');
+    var tempInput = document.createElement('input');
+    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+    tempInput.value = postLink;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+
+    // Show tooltip
+    var tooltip = document.getElementById('tooltip');
+    tooltip.style.left = event.pageX + 'px'; // Position the tooltip at the mouse position
+    tooltip.style.top = (event.pageY - 30) + 'px'; // Position the tooltip 30px above the mouse position
+    tooltip.style.display = 'block'; // Show the tooltip
+
+    // Hide tooltip after 1 second
+    setTimeout(() => {
+      tooltip.style.display = 'none';
+    }, 500);
+  });
+});
+</script>
 
 <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
 
