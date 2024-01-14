@@ -68,8 +68,24 @@ function replaceTextareaWithOriginal(textarea, newValue, originalTag) {
     if (textarea) {
         console.log(textarea);
         const element = document.createElement(originalTag);
-        element.textContent = newValue;
         element.className = textarea.className;
+
+        // Check if textarea is a code block
+        if (textarea.className.includes('post-code')) {
+            // Extract the language from the textarea's class
+            const lang = textarea.className.match(/language-(\w+)/)[1];
+
+            // Create a new code element
+            let codeElement = document.createElement('code');
+            codeElement.className = "language-" + lang;
+            codeElement.textContent = textarea.value;
+            
+            // Append the code element to the pre element
+            element.appendChild(codeElement);
+        } else {
+            element.textContent = newValue;
+        }
+
         textarea.parentNode.replaceChild(element, textarea);
     } else {
         console.error('Textarea does not exist');
