@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Request, Depends, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Request, Depends, Form, Body
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
+from schemas import PostEdit
 from database import get_db
 
 from crud import crud_user, crud_post, crud_comment, crud_like
@@ -72,8 +73,8 @@ async def delete_post(request: Request, post_id: int, db: Session = Depends(get_
     return RedirectResponse(url="/feed", status_code=303)
 
 
-@router.post("/post/{post_id}/edit", response_class=HTMLResponse, tags=["Feed"])
-async def edit_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+@router.post("/post/{post_id}/edit", response_class=JSONResponse, tags=["Feed"])
+async def edit_post(request: Request, post_id: int, post_edit: PostEdit = Body(...), db: Session = Depends(get_db)):
     # Check if user is logged in
     token = request.cookies.get("access_token")
     if not token:
@@ -82,6 +83,11 @@ async def edit_post(request: Request, post_id: int, db: Session = Depends(get_db
     # Get current user
     current_user = crud_user.get_current_user(db, token)
     
-    post = crud_post.get_post_by_id(db, post_id)
+    post_author = crud_post.get_post_by_id(db, post_id).author_id
+    
+    if current_user.user_id != post_author:
+        raise HTTPException(status_code=400, detail="You can't edit not your post.")
+    
+    crud_post.edit_post(db, post_id, post_edit)
 
-    return {"post": post, "current_user": current_user}
+    return JSONResponse(content={"message": "Post edited successfully"})

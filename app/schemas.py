@@ -14,3 +14,8 @@ class UserUpdate(BaseModel):
     bio: Optional[str] = None
     pictureUrl: Optional[str] = None
     password: Optional[str] = None
+    
+class PostEdit(BaseModel):
+    description: Optional[str] = None
+    code: Optional[str] = None
+    output: Optional[str] = None

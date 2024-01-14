@@ -60,32 +60,6 @@
     </div>
 </div>
 
-<script>
-document.querySelectorAll('.share-button').forEach(button => {
-  button.addEventListener('click', function(event) {
-    var postLink = this.getAttribute('data-post-link');
-    var tempInput = document.createElement('input');
-    tempInput.style = "position: absolute; left: -1000px; top: -1000px";
-    tempInput.value = postLink;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-
-    // Show tooltip
-    var tooltip = document.getElementById('tooltip');
-    tooltip.style.left = event.pageX + 'px'; // Position the tooltip at the mouse position
-    tooltip.style.top = (event.pageY - 30) + 'px'; // Position the tooltip 30px above the mouse position
-    tooltip.style.display = 'block'; // Show the tooltip
-
-    // Hide tooltip after 1 second
-    setTimeout(() => {
-      tooltip.style.display = 'none';
-    }, 500);
-  });
-});
-</script>
-
 <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
 
 <style>

@@ -56,23 +56,40 @@ function replaceWithTextarea(element) {
     if (element) {
         let textarea = document.createElement('textarea');
         textarea.value = element.textContent;
+        textarea.className = element.className;
+        
         textarea.style.background = 'none'; // remove background
         textarea.style.cssText = ''; // remove initial styling
-        textarea.className = element.className; // copy class name from the element to the textarea
         textarea.style.width = '100%'; // add width: 100%
         textarea.style.display = 'block'; // add display: block
         textarea.style.border = 'none'; // remove border
         textarea.style.outline = 'none'; // remove outline
+        
         textarea.onfocus = function() {
             this.style.outline = 'none';
         };
 
-        
         element.parentNode.replaceChild(textarea, element);
-    } else {
-        console.error('Element does not exist');
     }
 }
+
+// Function to replace textarea with original element
+function replaceTextareaWithOriginal(textarea, newValue, originalTag) {
+    // Check if the textarea exists
+    if (textarea) {
+        // Create the original element with the new value
+        let originalElement = document.createElement(originalTag);
+        originalElement.textContent = newValue;
+        originalElement.className = textarea.className;
+
+        // Replace the textarea with the original element
+        textarea.parentNode.replaceChild(originalElement, textarea);
+
+        // Remove the onfocus event listener
+        originalElement.onfocus = null;
+    }
+}
+
 // Get all save buttons
 let saveButtons = document.querySelectorAll('.save-button');
 
@@ -106,13 +123,50 @@ saveButtons.forEach(button => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
         })
         .then(data => {
-            console.log(data);
+            // Replace the textareas with the original elements
+            let descriptionElement = postContainer.querySelector('textarea.post-description');
+            let codeElement = postContainer.querySelector('textarea.post-code');
+            let outputElement = postContainer.querySelector('textarea.post-output');
+
+            replaceTextareaWithOriginal(descriptionElement, newDescription, 'p');
+            replaceTextareaWithOriginal(codeElement, newCode, 'pre');
+            replaceTextareaWithOriginal(outputElement, newOutput, 'pre');
+
+            // Hide the save button and show the settings icon
+            let saveButton = postContainer.querySelector('.save-button');
+            let settingsIcon = postContainer.querySelector('.settings-icon');
+            saveButton.style.display = 'none';
+            settingsIcon.style.display = 'block';
         })
         .catch((error) => {
             console.error('Error:', error);
         });
     });
 });
+
+// Share button
+document.querySelectorAll('.share-button').forEach(button => {
+    button.addEventListener('click', function(event) {
+      var postLink = this.getAttribute('data-post-link');
+      var tempInput = document.createElement('input');
+      tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+      tempInput.value = postLink;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+  
+      // Show tooltip
+      var tooltip = document.getElementById('tooltip');
+      tooltip.style.left = event.pageX + 'px'; // Position the tooltip at the mouse position
+      tooltip.style.top = (event.pageY - 30) + 'px'; // Position the tooltip 30px above the mouse position
+      tooltip.style.display = 'block'; // Show the tooltip
+  
+      // Hide tooltip after 1 second
+      setTimeout(() => {
+        tooltip.style.display = 'none';
+      }, 500);
+    });
+  });
