@@ -14,30 +14,52 @@
 
     <!-- TODO: Change data to that passed to the template -->
     <div class="container max-w-md md:max-w-2xl mx-auto mt-24 px-4">
-        <a href="/feed" class="ml-3 mb-3 inline-block text-xs"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="#" onclick="goBack()" class="ml-3 mb-3 inline-block text-xs"><i class="fas fa-arrow-left"></i> Back</a>
         
-        <div id="{{post.post_id}}" class="mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
+        <div id="{{post.post_id}}" class="post-container mx-auto bg-white rounded-xl border border-neutral-400 mb-3 p-4">
             <!-- Post Header -->
-            <div class="flex items-center">
-                <img class="h-11 w-11 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture">
-                <div class="ml-4">
-                    <div class="font-bold text-lg">{{author.username}}</div>
-                    <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
+
+            <div class="flex justify-between">
+                <div class="flex items-center">
+                    <img class="h-11 w-11 rounded-full object-cover" src="{{author.pictureUrl}}" alt="Profile Picture">
+                    <div class="ml-4">
+                        <div class="font-bold text-lg">{{author.username}}</div>
+                        <div class="text-gray-600 text-sm date-posted">{{post.date}}</div>
+                    </div>
                 </div>
+
+                {% if post.author_id == current_user.user_id %}
+                    <div class="relative inline-block text-left">
+                        <a id="settings-icon-{{post.post_id}}" class="settings-icon text-gray-600 hover:text-indigo-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </a>
+                        <div class="dropdown-menu origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                <a class="edit-button block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="/post/{{post.post_id}}/delete" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 hover:text-red-900" role="menuitem">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Save button -->
+                        <button class="save-button text-gray-600 hover:text-indigo-600 hidden">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                {% endif %}
             </div>
         
             <!-- Post Content -->
             <div class="my-4">
-                <p class="text-gray-800">{{post.description}}</p>
-                <!-- Code Section -->
+                <p class="description text-gray-800 post-description">{{ post.description }}</p>
                 <div class="rounded mt-4 p-4 text-white" style="background-color: #404040;">
-                    <!-- Programming Language Label -->
-                    <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{post.lang}}</div>
-                    <!-- Code Content -->
-                    <pre class="custom-scrollbar rounded mt-2 p-4 bg-neutral-800 font-mono"><code class="language-{{post.lang}}">{{post.code}}</code></pre>
-                    <!-- Output Section -->
+                    <div class="inline-block rounded px-2 py-1 text-sm font-bold bg-neutral-800 text-neutral-400">{{ post.lang }}</div>
+                    <pre class="code custom-scrollbar rounded mt-2 p-4 bg-neutral-800 font-mono post-code"><code class="language-{{ post.lang }}">{{ post.code }}</code></pre>
                     {% if post.output %}
-                        <pre class="rounded mt-2 p-4 bg-neutral-800">{{ post.output }}</pre>
+                    <pre class="output rounded mt-2 p-4 bg-neutral-800 post-output">{{ post.output }}</pre>
                     {%endif%}
                 </div>
             </div>
@@ -98,7 +120,13 @@
         </script>
 
         <script src="{{ url_for('static', path='/js/dateparser.js') }}"></script>
-        <script src="{{ url_for('static', path='/js/prism.js') }}"></script> 
+        <script src="{{ url_for('static', path='/js/prism.js') }}"></script>
+        <script src="{{ url_for('static', path='/js/post.js') }}"></script>
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
 
         <style>
             .custom-scrollbar::-webkit-scrollbar {
