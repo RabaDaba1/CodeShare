@@ -14,6 +14,16 @@ shareButtons.forEach(button => {
     button.addEventListener('click', handleShareButtonClick);
 });
 
+// Like button
+document.querySelectorAll('.post-like').forEach(button => {
+    button.addEventListener('click', function() {
+        // Toggle the button appearance
+        const heartIcon = this.firstChild;
+        heartIcon.classList.toggle('far');
+        heartIcon.classList.toggle('fas');
+    });
+});
+
 // Function to toggle dropdown menu
 function toggleDropdownMenu(event) {
     event.stopPropagation();
