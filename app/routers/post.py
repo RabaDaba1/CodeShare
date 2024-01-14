@@ -49,6 +49,7 @@ async def new_comment(request: Request, post_id: int, content: str = Form(...), 
     # Redirect the user to the feed page
     return RedirectResponse(url=f"/feed/{post_id}", status_code=303)
 
+
 @router.get("/post/{post_id}/delete")
 async def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
     # Check if user is logged in
@@ -65,3 +66,18 @@ async def delete_post(request: Request, post_id: int, db: Session = Depends(get_
 
     # Redirect the user to the feed page
     return RedirectResponse(url="/feed", status_code=303)
+
+
+@router.post("/post/{post_id}/edit", response_class=HTMLResponse, tags=["Feed"])
+async def edit_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    # Check if user is logged in
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login", status_code=303)
+    
+    # Get current user
+    current_user = crud_user.get_current_user(db, token)
+    
+    # post = crud_post.get_post_by_id(db, post_id)
+
+    # return {"post": post, "current_user": current_user}
