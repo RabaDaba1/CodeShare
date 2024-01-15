@@ -22,7 +22,7 @@
                                 </a>
                             {% endif %}
                         </div>
-                        <img class="mx-auto rounded-full p-4" src="{{ user.pictureUrl }}" alt="{{ user.login }}'s profile picture">
+                        <img class="mx-auto rounded-full p-4 object-cover" src="{{ user.pictureUrl }}" alt="{{ user.login }}'s profile picture">
                         <h2 class="text-xl font-bold mt-4">{{ user.username }}</h2>
                         <p class="mt-2 text-sm text-gray-500">
                             <a href="#" id="followersLink">{{followers|length}} followers</a> | 
