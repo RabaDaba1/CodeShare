@@ -46,9 +46,9 @@
 
     <div class="flex items-center justify-start space-x-4">
         {% if is_liked %}
-            <a href="/{{post.post_id}}/unlike" class="post-like text-gray-600 hover:text-indigo-600"><i class="fas fa-heart"></i> {{like_count}}</a>
+            <a href="/post/{{post.post_id}}/unlike" class="post-like text-gray-600 hover:text-indigo-600"><i class="fas fa-heart"></i> {{like_count}}</a>
         {% else %}
-            <a href="/{{post.post_id}}/like" class="post-like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
+            <a href="/post/{{post.post_id}}/like" class="post-like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
         {% endif %}
         <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
             <i class="far fa-comment"></i> Comment
