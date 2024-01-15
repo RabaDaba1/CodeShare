@@ -15,7 +15,7 @@ CodeShare is a social media platform designed specifically for software develope
 To install the required libraries, run the following command:
 
 ```bash
-pip install fastapi uvicorn Jinja2 SQLAlchemy pytailwindcss passlib bcrypt python-multipart pyjwt
+pip install -r requirements.txt
 ```
 
 To install Tailwind CSS, run:
