@@ -48,3 +48,12 @@ async def home(request: Request, db = Depends(get_db)):
         current_user = crud_user.get_current_user(db, token)
     
     return templates.TemplateResponse("index.html", {"request": request, "current_user": current_user})
+
+@app.get("/{full_path:path}", response_class=HTMLResponse)
+def catch_all(request: Request, full_path: str, db = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    current_user = None
+    if token:
+        current_user = crud_user.get_current_user(db, token)
+        
+    return templates.TemplateResponse("error.html", {"request": request, "message": f"404 error", "detailed_message": "The page you are looking for does not exist.", "current_user": current_user})
