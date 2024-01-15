@@ -50,10 +50,10 @@
         {% else %}
             <a href="/post/{{post.post_id}}/like" class="post-like text-gray-600 hover:text-indigo-600"><i class="far fa-heart"></i> {{like_count}}</a>
         {% endif %}
-        <a href="/feed/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
+        <a href="/post/{{post.post_id}}" class="text-gray-600 hover:text-indigo-600">
             <i class="far fa-comment"></i> Comment
         </a>
-        <button class="share-button text-gray-600 hover:text-indigo-600" data-post-link="http://127.0.0.1:8000/feed/{{ post.post_id }}"><i class="far fa-share-square"></i> Share</button>
+        <button class="share-button text-gray-600 hover:text-indigo-600" data-post-link="http://127.0.0.1:8000/post/{{ post.post_id }}"><i class="far fa-share-square"></i> Share</button>
         <div id="tooltip" style="position: absolute; display: none; background: #404040; color: #FFFFFF; padding: 5px; border-radius: 5px;">Copied!</div>
     </div>
 </div>

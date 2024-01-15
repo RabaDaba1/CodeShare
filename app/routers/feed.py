@@ -40,7 +40,7 @@ async def feed(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("feed.html", {"request": request, "posts": posts, "current_user": current_user})
 
 
-@router.post("/feed", response_model_exclude_unset=True)
+@router.post("/post", response_model_exclude_unset=True)
 async def new_post(request: Request, description: str = Form(...), programming_language: str = Form(...), code: str = Form(...), output: str = Form(None), db: Session = Depends(get_db)):
     # Check if user is logged in
     token = request.cookies.get("access_token")
