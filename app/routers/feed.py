@@ -57,7 +57,3 @@ async def new_post(request: Request, description: str = Form(...), programming_l
     # Redirect the user to the feed page
     return RedirectResponse(url="/feed", status_code=303)
 
-
-# TODO: Create a PUT endpoint for the post edition form at /feed/{post_id}
-
-# TODO: Create a DELETE endpoint for the post deletion form at /feed/{post_id}

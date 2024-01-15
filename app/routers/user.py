@@ -44,5 +44,3 @@ async def user_page(request: Request, login: str, db: Session = Depends(get_db))
 
     return templates.TemplateResponse("user.html", {"request": request, "posts": posts, "user": user, "current_user": current_user, 
                                                     "follows": follows, "followers": followers, "followed": followed, "users_followed_by_current_user": users_followed_by_current_user})
-
-# TODO: Create a DELETE endpoint for deleting user account at /user/{username}
